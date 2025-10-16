@@ -1,0 +1,36 @@
+● ✅ Automatiquement activé (sans rien faire) :
+
+  Avec ta config actuelle, PostHog track automatiquement :
+
+  1. 📊 Pageviews
+
+  - Chaque fois qu'un utilisateur visite une page
+  - URL complète trackée
+
+  2. 👤 Sessions utilisateur
+
+  - Durée de visite
+  - Nombre de pages vues par session
+  - Temps entre les pages
+
+  3. 🌍 Données géographiques
+
+  - Pays
+  - Ville (approximative)
+
+  4. 📱 Informations device
+
+  - Desktop/Mobile/Tablet
+  - Navigateur (Chrome, Firefox, Safari, etc.)
+  - Système d'exploitation (Windows, Mac, Android, iOS)
+  - Taille d'écran
+
+  5. 🔗 Source de trafic
+
+  - D'où viennent les visiteurs (Google, direct, réseaux sociaux)
+  - URL de référence
+
+  6. ⏰ Timestamps
+
+  - Heure de chaque visite
+  - Timezone

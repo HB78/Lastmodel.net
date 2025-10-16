@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,52 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Testing
+.nyc_output
+playwright-report/
+test-results/
+*.lcov
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Notes et fichiers temporaires du projet
+authts-original.txt
+packagejson.txt
+stripe-commande.txt
+todo-cache.txt
+todo.txt
+tunnelVente.txt
+CRON_SECRET_SETUP.md
+DEPLOYMENT_CHECKLIST.md
+
+## Le fichier prisma src
+src/

@@ -1,0 +1,31 @@
+pour setup la connexion google provider
+https://console.cloud.google.com
+
+Ouvrir le menu de gauche et aller dans api et service
+ensuite cliquer sur identifiants (ou credentials en anglais)
+
+cliquer toute, haut a droite du logo google cloud sur un bouton ou il y aura le dernier projet fait.
+Faire creer un nopuveau projet
+Donner juste un nom au projet puis entrer
+puis retrourner en a droite a coté du logo google cloud pour selectionenr le projet
+
+cliquer sur ecran de consentement puis sur premier pas
+mettre le nom du projet puis sa propre adresse mail puis cliquer sur suivant
+cliquer sur externe pour le menu cible puis suivant
+pour informations de contacte, mettre son adresse mail
+puis cliquer sur terminer et enfin cliquer sur créer
+
+on peut aller sur branding pour faire plus de setup
+mais il faut 
+
+cliquer ensuite sur "creer des identifiant" ou "create credentials"
+cliquer sur OAuth client id
+cliquer sur application web
+dans ajouter uri autorizes js origin mettre http://localhost:3000
+dans url de redirection mettre http://localhost:3000/api/auth/callback/google
+a savoir que le http://localhost:3000 devra etre remplacer dans les 2 cas par l'adresse du site
+
+appuyer sur créer et copier les identifiants
+
+
+

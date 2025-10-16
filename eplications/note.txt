@@ -1,0 +1,176 @@
+● Bonne question ! 🤔 Ça dépend de votre stratégie UX.
+
+  Les 2 approches :
+
+  1. Middleware strict (vérification emailVerified)
+
+  const session = getSessionCookie(req);
+  // Problème : getSessionCookie ne donne pas accès à emailVerified
+  // Il faudrait revenir à auth.api.getSession()
+
+  2. Composant/Page level (votre approche actuelle)
+
+  // Dans vos pages sensibles
+  const session = await auth.api.getSession();
+  if (!session.user.emailVerified) {
+    return <EmailVerificationBanner />;
+  }
+
+  Mon conseil : Page level pour plusieurs raisons :
+
+  🎯 UX plus smooth :
+  - Utilisateur peut naviguer librement
+  - Banner/modal pour rappeler la vérification
+  - Pas de frustration avec des redirections constantes
+
+  ⚡ Performance :
+  - Middleware reste ultra rapide
+  - Vérification seulement sur les pages importantes
+
+  🛠️ Flexibilité :
+  - Certaines actions OK sans email vérifié (profil, paramètres)
+  - Autres bloquées (créer un produit, accès admin)
+
+  Pattern que je recommande :
+
+  // Pages sensibles uniquement
+  if (!session.user.emailVerified) {
+    return <RequireEmailVerification />;
+  }
+
+  middleware original 
+  import {
+  apiAuthPrefix,
+  authRoutes,
+  DEFAULT_LOGIN_REDIRECT,
+  publicRoutes,
+  protectedRoutes,
+  adminRoutes,
+  allowedOrigins,
+} from "@/lib/routes";
+import { getSessionCookie } from "better-auth/cookies";
+import { NextRequest, NextResponse } from "next/server";
+
+const isDevelopment = process.env.NODE_ENV === "development";
+
+export function middleware(req: NextRequest) {
+  const { nextUrl } = req;
+  const sessionCookie = getSessionCookie(req);
+  const LOGGED_IN = !!sessionCookie;
+
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route.endsWith("/**")) {
+      return nextUrl.pathname.startsWith(route.slice(0, -3));
+    }
+    return nextUrl.pathname === route;
+  });
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isProtectedRoute = protectedRoutes.some(route => nextUrl.pathname.startsWith(route));
+  const isAdminRoute = adminRoutes.some(route => nextUrl.pathname.startsWith(route));
+
+  // Routes API d'auth - laisser passer
+  if (isApiAuthRoute) {
+    return;
+  }
+
+  // Routes d'authentification - rediriger si déjà connecté
+  if (isAuthRoute) {
+    if (LOGGED_IN) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return;
+  }
+
+  // Routes protégées - rediriger si pas connecté
+  if (isProtectedRoute && !LOGGED_IN) {
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
+
+  // Routes admin - rediriger si pas connecté (pas de vérification du rôle avec getSessionCookie)
+  if (isAdminRoute && !LOGGED_IN) {
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
+
+  // Routes publiques et gestion CORS
+  if (!isPublicRoute && !LOGGED_IN) {
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
+
+  const origin = req.headers.get("origin");
+
+  if (origin && !allowedOrigins.includes(origin) && !isDevelopment) {
+    return new NextResponse(null, {
+      status: 403,
+      statusText: "Forbidden",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  const requestHeaders = new Headers(req.headers);
+  const res = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  appendCorsHeaders(res.headers, origin);
+  appendCspHeaders(res.headers);
+
+  return res;
+}
+
+function appendCorsHeaders(headers: Headers, origin: string | null) {
+  if (origin && allowedOrigins.includes(origin)) {
+    headers.set("Access-Control-Allow-Credentials", "true");
+    headers.set("Access-Control-Allow-Origin", origin);
+    headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    headers.set(
+      "Access-Control-Allow-Headers",
+      "X-CSRF-Token, X-Requested-With, Content-Type, Content-Length, Accept, Accept-Version, Date, X-Api-Version"
+    );
+  }
+}
+
+function appendCspHeaders(headers: Headers) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+
+  const policy = isDevelopment
+    ? `
+      default-src 'self';
+      script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'nonce-${nonce}' 'unsafe-inline';
+      img-src 'self' blob: data:;
+      font-src 'self';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'none';
+      upgrade-insecure-requests;
+    `
+    : `
+      default-src 'self';
+      script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+      style-src 'self' 'nonce-${nonce}';
+      img-src 'self' blob: data:;
+      font-src 'self';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'none';
+      upgrade-insecure-requests;
+      connect-src 'self' https:;
+    `;
+
+  headers.set("Content-Security-Policy", policy.replace(/\s{2,}/g, " ").trim());
+  headers.set("x-nonce", nonce);
+}
+
+export const config = {
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
+};

@@ -1,0 +1,31 @@
+1 dans la page principale / on va chercher les params et on les passe en props a product-grid
+
+2 dans product-grid on créer avant le composant deux fonctions :
+
+I builWhere
+---> on crée une fonction buildwhere avec en argument les filters
+---> cela va moduler le fetch avec les where qu'on aura accumulé
+---> on nettoie les filters si ya age par ex on met age dans les filters etc
+---> on prends que les users ayant un payé et ayant une photo isMais
+
+II fetchProduct
+---> on fait une requète prisma mais on utilise le where créee grace à la fonction buildwhere
+---> on utilise aussi un filter en argument mais la filter et un objet vide
+---> l'objet vide c'est pour permettre la requete meme si il n'y a pas de filtres
+
+3 on a fait deux types/interfaces filter
+---> il y a l'interface Filter qui sert a typer les filtres qui sont les arguments des fonctions
+---> j'ai aussi typer les filtres des params qui viennent des composants parents
+
+4 creation du composant
+---> je vais chercher les filters passés en props et je les types
+---> mais je fais en sorte que filter soit un objet vide pour ne pas bloquer le fetch
+---> je fais un objet cleanFilters ou je traite les data-filters recu du composant parent
+---> cleanFilters utilise le type Filter et je gère chaque champs
+---> si il y a un champs et qu'il est de type string je le mets dans l'objet sinon je met undefined
+
+5 lancement du fetch
+---> je lance le fetch pour aller chercher la data en utilisant la fonction du II
+---> j'utilise cleanFilters comme argument de la fonction
+---> je fais au final un map sur un composant card dans lequel j'ai donné le resultat du fetch
+

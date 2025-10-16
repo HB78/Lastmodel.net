@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============= ENUMS =============
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum SubscriptionType {
+  FREE
+  MONTHLY
+  YEARLY
+}
+
+// ============= AUTH MODELS =============
+
+model account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model user {
+  id               String  @id @default(cuid())
+  name             String
+  image            String?
+  sex              String  @default("femme")
+  poids            Int? // en kg (ex: 75)
+  taille           Int? // en cm (ex: 175)
+  email            String  @unique
+  emailVerified    Boolean
+  stripeCustomerId String?
+
+  role             Role             @default(USER)
+  subscriptionType SubscriptionType @default(FREE)
+
+  age         Int?
+  description String?
+  phone       String?  @unique
+  city        String?
+  originId    String?
+  origin      origin?  @relation(fields: [originId], references: [id])
+  createdAt   DateTime
+  updatedAt   DateTime
+
+  // Relations
+  account          account[]
+  session          session[]
+  photos           photo[]
+  writtenComments  commentaire[] @relation("CommentAuthor")
+  receivedComments commentaire[] @relation("CommentProfile")
+  givenLikes       like[]        @relation("UserLikes")
+  receivedLikes    like[]        @relation("ProfileLiked")
+
+  @@map("users")
+}
+
+model verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verifications")
+}
+
+// ============= BUSINESS MODELS =============
+
+model origin {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     user[]
+
+  @@map("origins")
+}
+
+model photo {
+  id        String   @id @default(cuid())
+  url       String
+  isMain    Boolean  @default(false)
+  order     Int      @default(0)
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("photos")
+}
+
+model commentaire {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String
+  author    user     @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   user     @relation("CommentProfile", fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("commentaires")
+}
+
+model like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      user     @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   user     @relation("ProfileLiked", fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, profileId])
+  @@map("likes")
+}
+
+model contactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
+
+// ============= PAYMENT MODELS =============
+
+model subscription {
+  id                   String    @id @default(cuid())
+  plan                 String
+  referenceId          String    @unique
+  stripeCustomerId     String?
+  stripeSubscriptionId String?   @unique
+  status               String
+  periodStart          DateTime?
+  periodEnd            DateTime?
+  cancelAtPeriodEnd    Boolean   @default(false)
+  seats                Int?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@map("subscriptions")
+}

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(rm:*)",
+      "Read(//c/Users/batto/Desktop/projets/nowts/now.ts/**)",
+      "Read(//c/Users/batto/Desktop/projets/nowts/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

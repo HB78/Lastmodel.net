@@ -1,0 +1,84 @@
+● 🎯 Ordre de priorité recommandé :
+
+  1️⃣ Autocapture des clics ⚡ (2 minutes)
+
+  Pourquoi en premier :
+  - 1 ligne de code
+  - Données immédiates sur ce que les users cliquent
+  - Zéro maintenance
+
+  Impact : Comprendre où les users cliquent (boutons, liens, cartes de profil)
+
+  ---
+  2️⃣ Session Recordings 🎬 (5 minutes)
+
+  Pourquoi :
+  - Voir exactement comment les users galèrent
+  - Identifier les bugs UX que tu ne soupçonnes pas
+  - Très visuel, facile à comprendre
+
+  Impact : Découvrir pourquoi les gens ne s'inscrivent pas, où ils abandonnent
+
+  ---
+  3️⃣ User Identification 👤 (15 minutes)
+
+  Pourquoi :
+  - Lier les actions à un user spécifique
+  - Voir le parcours complet : anonyme → inscrit → premium
+  - Essentiel pour les autres features
+
+  Impact : Savoir qui fait quoi (pas juste un ID anonyme)
+
+  ---
+  4️⃣ Custom Events 📊 (30 minutes)
+
+  Pourquoi :
+  - Track ce qui compte vraiment pour ton business
+  - Exemples : likes, messages, inscriptions, paiements
+  - Créer des funnels après
+
+  Impact : Métriques business clés (conversion, engagement)
+
+  ---
+  5️⃣ Feature Flags 🚩 (quand tu en as besoin)
+
+  Pourquoi :
+  - Déployer progressivement de nouvelles features
+  - Tester sans redéployer
+  - Kill switch si bug
+
+  Impact : Déploiements plus sûrs, tests en prod
+
+  ---
+  6️⃣ A/B Tests 🧪 (après avoir du trafic)
+
+  Pourquoi :
+  - Nécessite du volume pour être statistiquement valide
+  - À faire quand tu as des hypothèses à tester
+
+  Impact : Optimiser les conversions (pricing, CTA, design)
+
+  ---
+  7️⃣ Heatmaps 🗺️ (automatique si recordings actifs)
+
+  Pourquoi :
+  - Vient automatiquement avec les session recordings
+  - Utile mais moins prioritaire
+
+  Impact : Visualiser les zones chaudes/froides
+
+  ---
+  ✅ Mon conseil : Commence par ces 3 (20 min total)
+
+  1. Autocapture (1 ligne de code)
+  2. Session Recordings (activer dans dashboard)
+  3. User Identification (dans ton action de login)
+
+  Après 1 semaine, tu auras déjà une tonne d'insights pour améliorer ton app.
+
+  Veux-tu qu'on les active ensemble maintenant ?
+
+─────────────────────────────────────────────────────────────────────────────────────────
+>  
+─────────────────────────────────────────────────────────────────────────────────────────
+  ? for shortcuts

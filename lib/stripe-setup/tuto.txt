@@ -1,0 +1,476 @@
+ Parfait ! Après analyse de votre codebase, voici comment intégrer Stripe pour un
+  système d'abonnement :
+
+  Architecture actuelle analysée :
+
+  - Auth : Better Auth + Prisma + PostgreSQL
+  - DB : Modèles user, photo, origin déjà en place
+  - Stack : Next.js 15, React 19, TypeScript
+  - Storage : S3/R2 pour les photos
+
+  Plan d'intégration Stripe :
+
+  1. Dépendances à installer
+
+  npm install stripe @stripe/stripe-js
+  npm install -D @types/stripe
+
+  2. Modèles Prisma à ajouter
+
+  // prisma/schema.prisma - Ajouter après le modèle photo
+
+  model subscription {
+    id                String    @id @default(cuid())
+    userId            String    @unique
+    user              user      @relation(fields: [userId], references: [id], onDelete:    
+   Cascade)
+
+    // Stripe fields
+    stripeCustomerId     String?   @unique
+    stripeSubscriptionId String?   @unique
+    stripePriceId        String?
+
+    // Plan fields
+    plan              Plan      @default(FREE)
+    status            SubscriptionStatus @default(INACTIVE)
+
+    // Dates
+    currentPeriodStart   DateTime?
+    currentPeriodEnd     DateTime?
+    cancelAtPeriodEnd    Boolean   @default(false)
+
+    createdAt         DateTime  @default(now())
+    updatedAt         DateTime  @updatedAt
+
+    @@map("subscriptions")
+  }
+
+  model payment {
+    id                String    @id @default(cuid())
+    userId            String
+    user              user      @relation(fields: [userId], references: [id], onDelete:    
+   Cascade)
+
+    // Stripe fields
+    stripePaymentId   String    @unique
+    amount            Int       // en centimes
+    currency          String    @default("eur")
+    status            PaymentStatus
+
+    createdAt         DateTime  @default(now())
+
+    @@map("payments")
+  }
+
+  enum Plan {
+    FREE
+    BASIC    // 5€/mois - 20 photos max
+    PREMIUM  // 10€/mois - photos illimitées + features premium
+  }
+
+  enum SubscriptionStatus {
+    ACTIVE
+    INACTIVE
+    CANCELED
+    PAST_DUE
+    UNPAID
+  }
+
+  enum PaymentStatus {
+    SUCCEEDED
+    FAILED
+    PENDING
+    CANCELED
+  }
+
+  // Modifier le modèle user pour ajouter les relations
+  model user {
+    // ... champs existants ...
+    
+    // Nouvelles relations
+    subscription      subscription?
+    payments          payment[]
+  }
+
+  3. Variables d'environnement
+
+  # .env.local
+  STRIPE_PUBLIC_KEY=pk_test_...
+  STRIPE_SECRET_KEY=sk_test_...
+  STRIPE_WEBHOOK_SECRET=whsec_...
+
+  4. Configuration Stripe
+
+  // lib/stripe/config.ts
+  import Stripe from 'stripe';
+
+  export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2024-11-20.acacia',
+  });
+
+  export const STRIPE_PLANS = {
+    BASIC: {
+      priceId: 'price_1234567890', // À créer sur Stripe Dashboard
+      name: 'Basic',
+      price: 5,
+      features: ['20 photos maximum', 'Profil personnalisé'],
+    },
+    PREMIUM: {
+      priceId: 'price_0987654321',
+      name: 'Premium',
+      price: 10,
+      features: ['Photos illimitées', 'Fonctionnalités premium', 'Support
+  prioritaire'],
+    },
+  } as const;
+
+  5. Routes API Stripe
+
+  // app/api/stripe/create-checkout-session/route.ts
+  import { auth } from '@/lib/better-auth-setup/auth';
+  import { prisma } from '@/lib/prisma-setup/db';
+  import { stripe, STRIPE_PLANS } from '@/lib/stripe/config';
+  import { headers } from 'next/headers';
+
+  export async function POST(request: Request) {
+    try {
+      const session = await auth.api.getSession({ headers: await headers() });
+      if (!session?.user) {
+        return Response.json({ error: 'Non autorisé' }, { status: 401 });
+      }
+
+      const { plan } = await request.json();
+
+      if (!STRIPE_PLANS[plan as keyof typeof STRIPE_PLANS]) {
+        return Response.json({ error: 'Plan invalide' }, { status: 400 });
+      }
+
+      // Créer ou récupérer le customer Stripe
+      let customer;
+      const userSubscription = await prisma.subscription.findUnique({
+        where: { userId: session.user.id }
+      });
+
+      if (userSubscription?.stripeCustomerId) {
+        customer = await stripe.customers.retrieve(userSubscription.stripeCustomerId);     
+      } else {
+        customer = await stripe.customers.create({
+          email: session.user.email,
+          name: session.user.name,
+          metadata: { userId: session.user.id },
+        });
+
+        // Sauvegarder le customer ID
+        await prisma.subscription.upsert({
+          where: { userId: session.user.id },
+          create: {
+            userId: session.user.id,
+            stripeCustomerId: customer.id,
+          },
+          update: {
+            stripeCustomerId: customer.id,
+          },
+        });
+      }
+
+      // Créer la session de checkout
+      const checkoutSession = await stripe.checkout.sessions.create({
+        customer: customer.id,
+        payment_method_types: ['card'],
+        billing_address_collection: 'required',
+        line_items: [{
+          price: STRIPE_PLANS[plan as keyof typeof STRIPE_PLANS].priceId,
+          quantity: 1,
+        }],
+        mode: 'subscription',
+        success_url: `${process.env.BETTER_AUTH_URL}/profile?success=true`,
+        cancel_url: `${process.env.BETTER_AUTH_URL}/profile?canceled=true`,
+        metadata: {
+          userId: session.user.id,
+          plan,
+        },
+      });
+
+      return Response.json({ url: checkoutSession.url });
+
+    } catch (error) {
+      console.error('Erreur checkout:', error);
+      return Response.json({ error: 'Erreur serveur' }, { status: 500 });
+    }
+  }
+
+  6. Webhook Stripe
+
+  // app/api/stripe/webhook/route.ts
+  import { prisma } from '@/lib/prisma-setup/db';
+  import { stripe } from '@/lib/stripe/config';
+  import { headers } from 'next/headers';
+  import Stripe from 'stripe';
+
+  export async function POST(request: Request) {
+    const body = await request.text();
+    const signature = (await headers()).get('stripe-signature')!;
+
+    let event: Stripe.Event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET!
+      );
+    } catch (err) {
+      console.error('Webhook signature verification failed.', err);
+      return new Response('Webhook Error', { status: 400 });
+    }
+
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed': {
+          const session = event.data.object as Stripe.Checkout.Session;
+          await handleCheckoutCompleted(session);
+          break;
+        }
+
+        case 'customer.subscription.updated': {
+          const subscription = event.data.object as Stripe.Subscription;
+          await handleSubscriptionUpdated(subscription);
+          break;
+        }
+
+        case 'customer.subscription.deleted': {
+          const subscription = event.data.object as Stripe.Subscription;
+          await handleSubscriptionDeleted(subscription);
+          break;
+        }
+      }
+
+      return new Response('OK', { status: 200 });
+    } catch (error) {
+      console.error('Webhook error:', error);
+      return new Response('Webhook Error', { status: 400 });
+    }
+  }
+
+  async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+    const userId = session.metadata?.userId;
+    if (!userId) return;
+
+    const subscription = await stripe.subscriptions.retrieve(session.subscription as       
+  string);
+
+    await prisma.subscription.update({
+      where: { userId },
+      data: {
+        stripeSubscriptionId: subscription.id,
+        stripePriceId: subscription.items.data[0].price.id,
+        status: 'ACTIVE',
+        plan: session.metadata?.plan as any,
+        currentPeriodStart: new Date(subscription.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      },
+    });
+  }
+
+  async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+    await prisma.subscription.updateMany({
+      where: { stripeSubscriptionId: subscription.id },
+      data: {
+        status: subscription.status.toUpperCase() as any,
+        currentPeriodStart: new Date(subscription.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      },
+    });
+  }
+
+  async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+    await prisma.subscription.updateMany({
+      where: { stripeSubscriptionId: subscription.id },
+      data: {
+        status: 'CANCELED',
+        stripeSubscriptionId: null,
+      },
+    });
+  }
+
+  7. Hook pour gérer l'abonnement
+
+  // lib/hooks/useSubscription.ts
+  import { useEffect, useState } from 'react';
+  import { Session } from '@/lib/better-auth-setup/auth';
+
+  interface Subscription {
+    plan: 'FREE' | 'BASIC' | 'PREMIUM';
+    status: string;
+    currentPeriodEnd?: Date;
+  }
+
+  export function useSubscription(user: Session['user']) {
+    const [subscription, setSubscription] = useState<Subscription | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      async function fetchSubscription() {
+        try {
+          const res = await fetch('/api/user/subscription');
+          if (res.ok) {
+            const data = await res.json();
+            setSubscription(data);
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération de l\'abonnement:', error);        
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      if (user) {
+        fetchSubscription();
+      }
+    }, [user]);
+
+    const upgradeToBasic = async () => {
+      const res = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'BASIC' }),
+      });
+
+      if (res.ok) {
+        const { url } = await res.json();
+        window.location.href = url;
+      }
+    };
+
+    const upgradeToPremium = async () => {
+      const res = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'PREMIUM' }),
+      });
+
+      if (res.ok) {
+        const { url } = await res.json();
+        window.location.href = url;
+      }
+    };
+
+    return {
+      subscription,
+      loading,
+      upgradeToBasic,
+      upgradeToPremium,
+      isBasic: subscription?.plan === 'BASIC',
+      isPremium: subscription?.plan === 'PREMIUM',
+      isFree: !subscription || subscription.plan === 'FREE',
+    };
+  }
+
+  8. Limites basées sur l'abonnement
+
+  Modifier votre usePhotoUpload :
+
+  // Dans components/dropzone/hooks/usePhotoUpload.ts
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      // Récupérer le plan de l'utilisateur
+      const userPlan = subscription?.plan || 'FREE';
+
+      // Définir les limites selon le plan
+      const MAX_PHOTOS = {
+        FREE: 5,
+        BASIC: 20,
+        PREMIUM: 50, // ou Infinity pour illimité
+      };
+
+      const currentLimit = MAX_PHOTOS[userPlan];
+
+      if (newPhotoCount > currentLimit) {
+        if (userPlan === 'FREE') {
+          toast.error(`Limite gratuite de ${currentLimit} photos atteinte. Passez à        
+  Basic pour 20 photos !`);
+          // Proposer l'upgrade
+          return;
+        }
+        // ... reste de la logique
+      }
+    },
+    [files.length, subscription]
+  );
+
+  9. Page de pricing
+
+  // app/pricing/page.tsx
+  "use client";
+
+  import { useSubscription } from '@/lib/hooks/useSubscription';
+  import { useSession } from '@/lib/better-auth-setup/auth';
+
+  export default function PricingPage() {
+    const { data: session } = useSession();
+    const { subscription, upgradeToBasic, upgradeToPremium } =
+  useSubscription(session?.user);
+
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Plan Gratuit */}
+          <div className="border rounded-lg p-6">
+            <h3 className="text-xl font-bold">Gratuit</h3>
+            <p className="text-3xl font-bold">0€<span
+  className="text-sm">/mois</span></p>
+            <ul className="mt-4 space-y-2">
+              <li>✓ 5 photos maximum</li>
+              <li>✓ Profil de base</li>
+            </ul>
+          </div>
+
+          {/* Plan Basic */}
+          <div className="border rounded-lg p-6">
+            <h3 className="text-xl font-bold">Basic</h3>
+            <p className="text-3xl font-bold">5€<span
+  className="text-sm">/mois</span></p>
+            <ul className="mt-4 space-y-2">
+              <li>✓ 20 photos maximum</li>
+              <li>✓ Profil personnalisé</li>
+            </ul>
+            <button
+              onClick={upgradeToBasic}
+              className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded"
+            >
+              Choisir Basic
+            </button>
+          </div>
+
+          {/* Plan Premium */}
+          <div className="border rounded-lg p-6 border-purple-500">
+            <h3 className="text-xl font-bold">Premium</h3>
+            <p className="text-3xl font-bold">10€<span
+  className="text-sm">/mois</span></p>
+            <ul className="mt-4 space-y-2">
+              <li>✓ Photos illimitées</li>
+              <li>✓ Fonctionnalités premium</li>
+              <li>✓ Support prioritaire</li>
+            </ul>
+            <button
+              onClick={upgradeToPremium}
+              className="mt-4 w-full bg-purple-600 text-white py-2 px-4 rounded"
+            >
+              Choisir Premium
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  Cette intégration s'appuie parfaitement sur votre architecture existante et ajoute un    
+   système d'abonnement complet ! 🚀
+
+───────────────────────────────────────────────────────────────────────────────────────────
+ >  
+───────────────────────────────────────────────────────────────────────────────────────────
+  ? for shortcuts
+
+

@@ -1,0 +1,40 @@
+🔄 Flux détaillé
+1
+Client envoie :
+{ email: "john@test.com", name: " john DOE " }
+2
+Hook intercepte et modifie :
+{ email: "john@test.com", name: "John Doe" }
+3
+Better-Auth reçoit :
+{ email: "john@test.com", name: "John Doe" }
+Better-Auth ne voit jamais les données originales !
+
+4
+Sauvé en base :
+{ id: "user_123", email: "john@test.com", name: "John Doe" }
+5
+Dans la session :
+{ userId: "user_123", name: "John Doe", email: "john@test.com" }
+❌ Ce que le hook NE fait PAS
+• Il n'affiche rien à l'utilisateur
+• Il ne crée pas de nouveau champ
+• Il ne log rien automatiquement
+• Il n'est pas visible dans les dev tools
+✅ Ce que le hook fait
+• Il remplace les données pour Better-Auth
+• Il nettoie/valide les inputs
+• Il transforme avant sauvegarde
+• Il agit comme un filtre invisible
+🔍 Comment voir l'effet du hook ?
+1.
+Dans la base de données :
+Le nom sera sauvé normalisé (sans espaces en trop, casse correcte)
+
+2.
+Dans la session utilisateur :
+user.name sera la version nettoyée
+
+3.
+Dans votre interface :
+Quand vous affichez le nom, il sera proprement formaté

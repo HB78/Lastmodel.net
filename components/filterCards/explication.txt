@@ -1,0 +1,75 @@
+Architecture du composant FilterDropdown
+Ce composant est un composant client React qui gère les filtres de recherche et leur synchronisation avec l'URL.
+1. Props et typage
+Le composant reçoit deux props :
+
+origins : Un tableau d'objets contenant les origines disponibles depuis la base de données
+currentFilters : Les paramètres URL actuels passés par la page parent (searchParams)
+
+L'interface FilterDropdownProps type ces props, où currentFilters peut contenir des strings, des arrays ou être undefined.
+2. Hooks et gestion d'état
+Le composant utilise plusieurs hooks :
+
+useRouter() pour naviguer et modifier l'URL
+useSearchParams() pour lire les paramètres URL actuels
+useId() pour générer des IDs uniques nécessaires à l'accessibilité
+
+3. Fonctions de gestion des filtres
+updateFilter(key, value)
+Cette fonction met à jour un filtre spécifique :
+
+Crée un nouvel objet URLSearchParams basé sur les paramètres actuels
+Si la valeur est valide (pas vide, pas "all"), elle ajoute le paramètre
+Sinon, elle supprime le paramètre
+Met à jour l'URL avec router.push(), ce qui déclenche un re-render
+
+clearAllFilters()
+Fonction simple qui redirige vers "/" pour effacer tous les filtres.
+4. Traitement et nettoyage des données
+Nettoyage des props
+Le composant convertit les props reçues (qui peuvent être des arrays) en strings utilisables :
+const currentAge = typeof currentFilters.age === "string" ? currentFilters.age : "";
+Comptage des filtres actifs
+Un tableau contenant tous les filtres est filtré pour compter seulement ceux qui sont définis et différents de "all".
+Description accessible
+La fonction getFilterDescription() crée une description textuelle des filtres actifs pour les lecteurs d'écran, en joignant les filtres avec des virgules.
+5. Structure du rendu
+Sémantique et accessibilité
+
+Section avec role="search" pour indiquer une zone de recherche
+Labels correctement associés aux inputs via htmlFor et des IDs uniques
+Annonces live (aria-live) pour communiquer les changements aux lecteurs d'écran
+Descriptions contextuelles avec aria-describedby
+
+Grille de filtres
+Quatre colonnes responsive contenant :
+
+Filtre âge : Select avec tranches d'âge prédéfinies (18-23, 24-27, etc.)
+Filtre origine : Select dynamique généré depuis la prop origins
+Filtre genre : Select avec options homme/femme incluant des émojis
+Filtre ville : Composant CityInput personnalisé pour la recherche de villes
+
+Footer avec actions
+
+Compteur de filtres avec description accessible
+Bouton de réinitialisation affiché seulement si des filtres sont actifs
+
+6. Flux de données et synchronisation
+Le flux fonctionne ainsi :
+
+La page parent passe les searchParams comme prop currentFilters
+Le FilterDropdown lit et nettoie ces valeurs pour l'affichage
+L'utilisateur modifie un filtre via les Select ou CityInput
+La fonction updateFilter() met à jour l'URL
+Next.js re-render la page avec les nouveaux searchParams
+Le composant ProductGrid reçoit les nouveaux filtres et refetch les données
+
+7. Points techniques importants
+
+Source de vérité unique : L'URL contient tous les filtres, pas de state interne
+Accessibilité complète : Structure ARIA, annonces live, IDs uniques
+Performance : Pas de re-renders inutiles car tout vient de l'URL
+UX temps réel : Feedback visuel immédiat du nombre de filtres actifs
+Controlled components : Tous les inputs sont contrôlés par les valeurs URL
+
+Ce pattern permet une synchronisation parfaite entre l'interface utilisateur, l'URL et les données affichées, tout en étant accessible et performant.

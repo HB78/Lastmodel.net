@@ -1,0 +1,77 @@
+Pas de souci, je vais décomposer cette partie étape par étape !
+
+  1. Déclaration du type et de l'objet
+
+  const planDetails: Record<string, { title: string; features: string[] }> = {
+
+  Traduction : "Je crée un objet où chaque clé est un string, et chaque valeur est un      
+  objet avec title (string) et features (tableau de strings)"
+
+  C'est comme un dictionnaire :
+  {
+    "CLE": { title: "...", features: ["...", "..."] },
+    "AUTRE_CLE": { title: "...", features: ["..."] }
+  }
+
+  2. Le contenu
+
+  MONTHLY: {
+    title: 'Plan Mensuel',
+    features: ['Profil visible', 'Upload 11 photos', ...]
+  },
+  YEARLY: {
+    title: 'Plan Annuel Premium',
+    features: ['Badge premium', 'Profil prioritaire', ...]
+  }
+
+  C'est un simple objet avec 2 clés : MONTHLY et YEARLY, chacune contenant le titre et     
+  les features pour l'email.
+
+  3. Récupérer le bon plan
+
+  const plan = planDetails[planName as keyof typeof planDetails];
+
+  Exemple concret :
+
+  Si planName = "MONTHLY" → plan = { title: 'Plan Mensuel', features: [...] }Si
+  planName = "YEARLY" → plan = { title: 'Plan Annuel Premium', features: [...] }Si
+  planName = "UNKNOWN" → plan = undefined
+
+  Le as keyof typeof planDetails dit juste à TypeScript : "fais-moi confiance, planName    
+   est une clé valide".
+
+  4. Valeurs par défaut
+
+  const planTitle = plan?.title || planName;
+  const features = plan?.features || [];
+
+  Traduction :
+  - Si plan existe → prendre plan.title, sinon prendre planName directement
+  - Si plan existe → prendre plan.features, sinon tableau vide []
+
+  ---
+  Version simplifiée pour comprendre
+
+  // C'est juste une base de données locale
+  const planDetails = {
+    MONTHLY: {
+      title: 'Plan Mensuel',
+      features: ['Feature 1', 'Feature 2']
+    },
+    YEARLY: {
+      title: 'Plan Annuel',
+      features: ['Feature A', 'Feature B']
+    }
+  };
+
+  // Je récupère le plan selon planName
+  // Si planName = "MONTHLY", je récupère planDetails.MONTHLY
+  const plan = planDetails[planName];
+
+  // Je récupère le titre (ou planName si pas trouvé)
+  const planTitle = plan?.title || planName;
+
+  // Je récupère les features (ou [] si pas trouvé)
+  const features = plan?.features || [];
+
+  C'est comme chercher dans un catalogue ! 📚

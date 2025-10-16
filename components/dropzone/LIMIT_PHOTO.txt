@@ -1,0 +1,148 @@
+SYSTÈME DE LIMITE DE PHOTOS - MAXIMUM 11 PHOTOS PAR UTILISATEUR
+================================================================
+
+📋 RÉSUMÉ DE L'IMPLÉMENTATION
+==============================
+
+Objectif : Limiter chaque utilisateur à un maximum de 11 photos sur son profil
+Raison : Contrôler l'espace de stockage, améliorer les performances, éviter l'abus
+
+🔧 MODIFICATIONS APPORTÉES
+==========================
+
+1. SCHÉMA PRISMA (prisma/schema.prisma)
+----------------------------------------
+- Ajout d'un commentaire documentant la limite :
+  // LIMITE : Maximum 11 photos par utilisateur (1 principale + 10 secondaires)
+
+2. COMPOSANT AddMorePhotosZone (components/dropzone/components/AddMorePhotosZone.tsx)
+-----------------------------------------------------------------------------------
+- Ajout de la prop 'totalPhotos' pour connaître le nombre actuel de photos
+- Constante MAX_PHOTOS = 11
+- Logique de désactivation visuelle après 11 photos
+- Trois états visuels :
+  * ÉTAT NORMAL : Zone de drop active avec indicateur "X/11 photos utilisées"
+  * ÉTAT DRAG ACTIVE : Message d'encouragement pendant le glisser-déposer
+  * ÉTAT LIMITE ATTEINTE : Zone désactivée avec message "Limite de photos atteinte"
+
+3. HOOK usePhotoUpload (components/dropzone/hooks/usePhotoUpload.ts)
+-------------------------------------------------------------------
+- Validation de la limite avant chaque drop de fichiers
+- Messages d'erreur/avertissement selon le cas :
+  * Si 11 photos déjà présentes → Toast d'erreur
+  * Si 10 photos + drop de 3 photos → Toast d'avertissement + accepte seulement 1 photo
+- Limitation intelligente du nombre de fichiers acceptés
+- Sécurité : empêche le dépassement de la limite
+
+4. COMPOSANT Dropzone (components/dropzone/Dropzone.tsx)
+--------------------------------------------------------
+- Passage du nombre total de photos au composant AddMorePhotosZone
+- Synchronisation de l'état entre le hook et l'interface
+
+🎯 FONCTIONNEMENT DU SYSTÈME
+=============================
+
+AVANT 11 PHOTOS :
+- ✅ Zone de drop active et cliquable
+- ✅ Indicateur "X/11 photos utilisées" visible
+- ✅ Upload normal des fichiers
+- ✅ Feedback visuel pendant le drag & drop
+
+À 11 PHOTOS :
+- ❌ Zone de drop désactivée (grisée, non cliquable)
+- ❌ Message informatif "Limite de photos atteinte"
+- ❌ Plus d'upload possible jusqu'à suppression d'une photo
+
+VALIDATION INTELLIGENTE :
+- Si 10 photos + drop de 3 photos → Accepte seulement 1 photo
+- Si 11 photos + drop de photos → Message d'erreur
+- Si 9 photos + drop de 5 photos → Accepte seulement 2 photos
+
+🔒 SÉCURITÉ ET VALIDATION
+==========================
+
+CÔTÉ CLIENT (Frontend) :
+- Validation immédiate dans le composant React
+- Désactivation visuelle de la zone de drop
+- Messages d'erreur clairs et informatifs
+- Indicateur de photos restantes
+
+CÔTÉ SERVEUR (Backend) :
+- Validation dans le hook usePhotoUpload
+- Empêche l'upload si la limite est dépassée
+- Gestion des cas limites (photos partielles)
+
+📱 EXPÉRIENCE UTILISATEUR
+==========================
+
+FEEDBACK VISUEL :
+- Indicateur de progression "X/11 photos utilisées"
+- Zone de drop qui change d'apparence selon l'état
+- Messages d'erreur/avertissement contextuels
+- Désactivation claire quand la limite est atteinte
+
+GESTION DES ERREURS :
+- Toast d'erreur si tentative d'upload à 11 photos
+- Toast d'avertissement si upload partiel possible
+- Messages explicatifs sur les actions à effectuer
+
+⚡ AVANTAGES DE CETTE APPROCHE
+==============================
+
+1. UX OPTIMALE :
+   - L'utilisateur voit immédiatement la limite
+   - Feedback en temps réel sur l'espace restant
+   - Désactivation automatique et claire
+
+2. SÉCURITÉ :
+   - Validation côté client ET serveur
+   - Empêche le dépassement de la limite
+   - Gestion intelligente des cas limites
+
+3. PERFORMANCE :
+   - Évite les uploads inutiles
+   - Contrôle de l'espace de stockage
+   - Optimisation des ressources
+
+4. MAINTENANCE :
+   - Constante MAX_PHOTOS facilement modifiable
+   - Code modulaire et réutilisable
+   - Logique centralisée dans le hook
+
+🔧 COMMENT MODIFIER LA LIMITE
+==============================
+
+Pour changer la limite de photos, modifier la constante dans :
+1. AddMorePhotosZone.tsx : const MAX_PHOTOS = 11;
+2. usePhotoUpload.ts : const MAX_PHOTOS = 11;
+
+Puis mettre à jour les messages et la documentation.
+
+📊 STATISTIQUES
+===============
+
+- Photos principales : 1 maximum
+- Photos secondaires : 10 maximum
+- Total par utilisateur : 11 photos maximum
+- Taille maximale par photo : 10MB
+- Formats acceptés : PNG, JPG, JPEG, GIF, WEBP
+
+🎉 RÉSULTAT FINAL
+==================
+
+Le système de photos est maintenant :
+✅ LIMITÉ à 11 photos maximum par utilisateur
+✅ SÉCURISÉ avec validation client + serveur
+✅ INTELLIGENT avec gestion des cas limites
+✅ UX OPTIMALE avec feedback visuel clair
+✅ PERFORMANT avec contrôle des ressources
+✅ MAINTENABLE avec code modulaire
+
+L'utilisateur ne peut plus dépasser la limite de 11 photos, et l'interface s'adapte automatiquement pour refléter cette contrainte.
+
+
+
+
+
+
+
