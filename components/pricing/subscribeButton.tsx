@@ -46,7 +46,7 @@ export function SubscribeButton({
 
     startTransition(async () => {
       try {
-        const { error } = await subscription.upgrade({
+        const { data, error } = await subscription.upgrade({
           plan: planName.toLowerCase(), // 'monthly' ou 'yearly'
           successUrl:
             successUrl ||
