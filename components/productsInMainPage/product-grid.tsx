@@ -79,7 +79,6 @@ const fetchProducts = async (filters: Filters = {}) => {
       },
     },
   });
-  console.log(products);
   return products;
 };
 
@@ -106,7 +105,7 @@ export async function ProductGrid({ filters = {} }: ProductGridProps) {
       role="region"
       aria-label="Liste des produits"
     >
-      {products.map((product, index) => (
+      {products.map((product) => (
         <ProductCard key={product.id} {...product} />
       ))}
     </section>

@@ -41,7 +41,6 @@ export const sendPasswordReset = async (
       `,
     });
 
-    console.log('Email de reset password envoyé avec succès à:', email);
     return result;
   } catch (error) {
     console.error(
@@ -227,7 +226,6 @@ export const sendEmailVerification = async (
       `,
     });
 
-    console.log('Email de vérification envoyé avec succès à:', email);
     return result;
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email de vérification:", error);
@@ -378,7 +376,6 @@ export const sendMagicLinkAction = async ({
       `,
     });
 
-    console.log('Magic link envoyé avec succès à:', email);
     return result;
   } catch (error) {
     console.error("Erreur lors de l'envoi du magic link:", error);
@@ -404,11 +401,6 @@ export const changeEmailVerification = async (
     }
 
     const confirmLink = url;
-
-    console.log(
-      "confirmLink: debut de l'envoi de l'email de changement d'email",
-      confirmLink
-    );
 
     const result = await resend.emails.send({
       from: 'boilerplate@lakka.blue',
@@ -487,7 +479,6 @@ export const changeEmailVerification = async (
       `,
     });
 
-    console.log("Email de changement d'email envoyé avec succès à:", email);
     return result;
   } catch (error) {
     console.error(
@@ -535,7 +526,6 @@ export async function sendContactEmail(data: ContactFormData) {
       `,
     });
 
-    console.log('Email de contact envoyé avec succès');
     return result;
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email de contact:", error);

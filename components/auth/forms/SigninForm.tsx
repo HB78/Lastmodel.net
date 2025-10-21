@@ -11,8 +11,8 @@ import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import CardWrapper from '../CardWrapper';
-import MagiklinkForm from './MagiklinkForm';
 import { UnverifiedEmailDialog } from '../dialogs/UnverifiedEmailDialog';
+import MagiklinkForm from './MagiklinkForm';
 
 const SigninForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -40,17 +40,13 @@ const SigninForm = () => {
             rememberMe: false,
           },
           {
-            onSuccess: () => {
-              console.log('Connexion réussie !');
-            },
+            onSuccess: () => {},
             onError: (error: any) => {
-              console.error('Erreur de connexion:', error);
               if (error.error.code === 'EMAIL_NOT_VERIFIED') {
                 // Ouvrir la modale au lieu d'afficher un simple toast
                 setUnverifiedEmail(data.email);
                 return;
               }
-              console.log('---> PUTAIN', error.error.code);
               toast.error('Vérifiez vos identifiants');
             },
           }

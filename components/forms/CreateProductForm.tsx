@@ -107,8 +107,6 @@ const CreateProductForm = ({ origins }: CreateProductFormProps) => {
     });
   };
 
-  const watchedAge = watch('age');
-
   // Optimisation performance : mémoriser le compteur de caractères
   const descriptionLength = useMemo(
     () => watch('description')?.length || 0,

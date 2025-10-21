@@ -4,8 +4,6 @@ import { Cookie, Settings, X } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { useEffect, useState } from 'react';
 
-type CookieConsent = 'all' | 'essential' | null;
-
 export function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);

@@ -150,8 +150,6 @@ export function usePhotoUpload(
    */
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      console.log('Files dropped:', acceptedFiles.length);
-
       // Constante pour la limite de photos
 
       if (acceptedFiles.length > 0) {
@@ -193,7 +191,6 @@ export function usePhotoUpload(
         const totalUploads = acceptedFiles.length;
 
         acceptedFiles.forEach((file) => {
-          console.log(`Starting upload process for: ${file.name}`);
           startTransition(async () => {
             await uploadToS3(file); // ← Appel direct de uploadToS3
 

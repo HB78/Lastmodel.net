@@ -45,7 +45,6 @@ const AddCommentaireForm = ({ id }: AddCommentaireProps) => {
     startTransition(async () => {
       try {
         // Préparer le FormData pour la server action
-        console.log("debut de l'envoi du commentaire");
         const formData = new FormData();
         formData.append('commentaire', data.commentaire);
         formData.append('profileId', id);

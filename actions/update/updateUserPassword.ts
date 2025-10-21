@@ -19,8 +19,6 @@ export async function changePasswordAction(formData: FormData) {
   const hasCredentials = accounts.some(
     (a) => a.providerId === 'credentials' || a.providerId === 'credential'
   );
-  console.log('accounts:', accounts);
-  console.log('hasCredentials:', hasCredentials);
 
   if (!hasCredentials) {
     return { error: 'Mot de passe non modifiable pour un compte OAuth pur' };

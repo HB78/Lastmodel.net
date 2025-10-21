@@ -16,11 +16,6 @@ export default async function Home({ searchParams }: HomeProps) {
   const session = await getSession();
   const params = await searchParams;
 
-  console.log('session:', session);
-  if (session) {
-    console.log('session: la connexion est établie', session);
-  }
-
   // Récupérer les origines depuis la base de données (avec cache 1h)
   const origins = await getCachedOrigins();
 

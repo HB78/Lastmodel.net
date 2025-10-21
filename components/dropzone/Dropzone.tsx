@@ -58,10 +58,7 @@ export function DropZone({
     },
     // Gestion des fichiers rejetés (trop gros, mauvais type, etc.)
     onDropRejected: (rejectedFiles) => {
-      console.log('Files rejected:', rejectedFiles);
       rejectedFiles.forEach(({ file, errors }) => {
-        console.log(`Rejected file: ${file.name}`, errors);
-
         // Messages d'erreur spécifiques selon le type de problème
         if (errors[0]?.code === 'file-too-large') {
           toast.error(`${file.name} is too large (max 10MB)`);

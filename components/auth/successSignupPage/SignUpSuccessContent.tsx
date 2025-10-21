@@ -1,14 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { sendVerificationEmail } from '@/lib/better-auth-setup/authClient';
 import { CheckCircle2, Mail, RefreshCw } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import CardWrapper from '../CardWrapper';
 
 export default function SignUpSuccessContent() {
   // Hooks pour la navigation et les paramètres URL
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   // États pour gérer le renvoi d'email
@@ -43,7 +42,9 @@ export default function SignUpSuccessContent() {
         const MIN_DELAY = 60 * 1000; // 60 secondes
 
         if (lastResendTime && now - lastResendTime < MIN_DELAY) {
-          const remainingSeconds = Math.ceil((MIN_DELAY - (now - lastResendTime)) / 1000);
+          const remainingSeconds = Math.ceil(
+            (MIN_DELAY - (now - lastResendTime)) / 1000
+          );
           toast.error(
             `Veuillez attendre ${remainingSeconds} secondes avant de renvoyer l'email.`
           );

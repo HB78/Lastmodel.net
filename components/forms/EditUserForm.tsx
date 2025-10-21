@@ -39,7 +39,6 @@ const EditUserForm = ({ session, origins }: EditUserFormProps) => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
     watch,
   } = useForm<UpdateUserProfilFormData>({
     resolver: zodResolver(UpdateUserProfilSchema),

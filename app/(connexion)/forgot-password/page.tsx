@@ -7,7 +7,6 @@ import { forgetPassword } from '@/lib/better-auth-setup/authClient';
 import { ForgotPasswordFormData, ForgotPasswordSchema } from '@/zodSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle, Mail } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -15,7 +14,6 @@ import { toast } from 'sonner';
 const ForgotPasswordForm = () => {
   const [isPending, startTransition] = useTransition();
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const router = useRouter();
 
   const {
     register,

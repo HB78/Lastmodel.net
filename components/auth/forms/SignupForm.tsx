@@ -35,7 +35,6 @@ const SignupForm = () => {
           },
           {
             onSuccess: () => {
-              console.log('Inscription réussie !');
               toast.success(
                 'Inscription réussie ! Veuillez vérifier votre email pour activer votre compte.'
               );
@@ -47,10 +46,6 @@ const SignupForm = () => {
         );
 
         if (error && typeof error === 'object' && 'code' in error) {
-          console.log('code', error.code);
-          console.log('message', error.message);
-          console.log('error', error);
-
           switch (error.code) {
             case 'USER_ALREADY_EXISTS':
               toast.error(

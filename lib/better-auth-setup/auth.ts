@@ -68,9 +68,6 @@ const options = {
       const link = new URL(url);
       link.searchParams.set('callbackURL', '/auth/verificationtoken');
 
-      console.log('token:', token);
-      console.log('user:', user);
-      console.log('url:', String(link));
       // Send verification email to user
       await sendEmailVerification(user.email, token, user.name, String(link));
     },
@@ -163,7 +160,6 @@ const options = {
         // Opération "create" (création)
         before: async (user) => {
           // AVANT la création en BDD
-          console.log('Nouvel utilisateur va être créé:', user);
 
           const ADMIN_EMAILS = ['battosai78@gmail.com'];
 
@@ -303,7 +299,6 @@ const options = {
           const matchingPlan = AUTH_PLANS.find((p) => p.priceId === priceId);
 
           if (!matchingPlan) {
-            console.error('No matching plan found', { event, subscription });
             return;
           }
 

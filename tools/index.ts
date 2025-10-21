@@ -123,7 +123,6 @@ export const checkUserWithAccounts = async () => {
         hasCredentials: false,
       };
     }
-    console.log('userWithAccounts:--> putain', userWithAccounts);
 
     //on retourne le provider
     const isCredentialAccount = userWithAccounts.account?.some(
@@ -136,7 +135,7 @@ export const checkUserWithAccounts = async () => {
       hasCredentials: isCredentialAccount, // ✅ CLAIR !
     };
   } catch (error) {
-    console.log('error:', error);
+    console.error('error:', error);
     return {
       session: null,
       provider: null as string | null,

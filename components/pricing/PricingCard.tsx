@@ -23,7 +23,6 @@ export function PricingCard({ plan }: PricingCardProps) {
   const priceId = `price-${plan.name}`;
 
   const isVIP = plan.name === 'YEARLY';
-  const isFree = plan.name === 'FREE';
 
   return (
     <Card

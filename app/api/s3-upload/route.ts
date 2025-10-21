@@ -36,8 +36,6 @@ const uploadSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  console.log('🚀 API /s3-upload called');
-
   // Vérification de l'authentification utilisateur
   const session = await getSession();
 
@@ -86,7 +84,6 @@ export async function POST(req: NextRequest) {
     });
 
     if (!validationResult.success) {
-      console.error('❌ Validation failed:', validationResult.error);
       return NextResponse.json(
         {
           error: 'Validation failed',
@@ -98,17 +95,7 @@ export async function POST(req: NextRequest) {
 
     const { file, prefix, fileName } = validationResult.data;
 
-    console.log('📁 File validated:', {
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      prefix,
-    });
-
-    console.log('📤 Starting upload to S3...');
     const url = await uploadFileToS3(file, fileName || undefined, prefix);
-
-    console.log('✅ Upload successful:', url);
 
     // Extraire la clé S3 depuis l'URL pour la suppression
     const fileKey = url.replace(`${process.env.R2_URL}/`, '');
@@ -123,7 +110,6 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('❌ Upload error:', error);
     return NextResponse.json(
       {
         error: (error as Error).message || 'Upload failed',

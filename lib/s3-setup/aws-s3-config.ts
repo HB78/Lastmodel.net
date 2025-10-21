@@ -76,7 +76,7 @@ export async function uploadFileToS3(
     await s3.send(command);
     return `${process.env.R2_URL}/${uniqueFileName}`;
   } catch (error) {
-    console.log('error: dans la config s3', error);
+    console.error('error: dans la config s3', error);
     throw new Error("Erreur lors de l'upload S3 : " + (error as Error).message);
   }
 }
@@ -91,7 +91,7 @@ export async function deleteFileFromS3(key: string) {
     await s3.send(command);
     return true;
   } catch (error) {
-    console.log('Erreur lors de la suppression S3 :', error);
+    console.error('Erreur lors de la suppression S3 :', error);
     throw new Error(
       'Erreur lors de la suppression S3 : ' + (error as Error).message
     );

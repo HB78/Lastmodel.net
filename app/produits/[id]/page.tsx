@@ -46,7 +46,6 @@ export async function generateMetadata({
   try {
     const { id } = await params;
     const product = await fetchProduct(id);
-    console.log('product: --> dans generateMetadata', product);
 
     if (!product) {
       return createNotFoundMetadata();
@@ -62,7 +61,6 @@ export async function generateMetadata({
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
   const product = await fetchProduct(id);
-  console.log('product:--> product page ', product);
   const session = await getSession();
 
   if (!product || !id) {

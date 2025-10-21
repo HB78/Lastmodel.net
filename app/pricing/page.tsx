@@ -29,7 +29,6 @@ export const metadata: Metadata = {
 export default async function PricingPage() {
   const session = await getSession();
   const typeOfSubscription = session?.user?.subscriptionType;
-  console.log('session:', session);
   const isLoggedIn = !!session?.user;
   if (isLoggedIn && typeOfSubscription !== 'FREE') redirect('/profile/billing');
 
@@ -63,7 +62,7 @@ export default async function PricingPage() {
           {/* Grille des plans - OPTIMISÉE POUR ÉVITER LE SCROLL */}
           <section className="mx-auto max-w-6xl">
             <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
-              {AUTH_PLANS.map((plan, index) => (
+              {AUTH_PLANS.map((plan) => (
                 <div
                   key={plan.name}
                   className="flex transition-transform duration-200 hover:-translate-y-1"
