@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 export function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [ageVerified, setAgeVerified] = useState(false);
   const [preferences, setPreferences] = useState({
     essential: true, // Toujours true, non modifiable
     analytics: false,
@@ -16,13 +17,17 @@ export function CookieBanner() {
   useEffect(() => {
     // Vérifier si l'utilisateur a déjà fait un choix
     const consent = localStorage.getItem('cookie-consent');
-    if (!consent) {
+    const ageCheck = localStorage.getItem('age-verified');
+
+    if (!consent || !ageCheck) {
       // Petit délai pour ne pas être trop agressif
       setTimeout(() => setShowBanner(true), 1000);
     }
   }, []);
 
   const handleAcceptAll = () => {
+    if (!ageVerified) return;
+
     const consent = {
       essential: true,
       analytics: true,
@@ -30,6 +35,7 @@ export function CookieBanner() {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem('cookie-consent', JSON.stringify(consent));
+    localStorage.setItem('age-verified', 'true');
     setShowBanner(false);
 
     // Ici tu peux activer tes scripts analytics (PostHog, etc.)
@@ -42,6 +48,8 @@ export function CookieBanner() {
   };
 
   const handleAcceptEssential = () => {
+    if (!ageVerified) return;
+
     const consent = {
       essential: true,
       analytics: false,
@@ -49,6 +57,7 @@ export function CookieBanner() {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem('cookie-consent', JSON.stringify(consent));
+    localStorage.setItem('age-verified', 'true');
     setShowBanner(false);
 
     // @ts-ignore
@@ -59,11 +68,14 @@ export function CookieBanner() {
   };
 
   const handleSavePreferences = () => {
+    if (!ageVerified) return;
+
     const consent = {
       ...preferences,
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem('cookie-consent', JSON.stringify(consent));
+    localStorage.setItem('age-verified', 'true');
     setShowBanner(false);
     setShowSettings(false);
 
@@ -121,6 +133,29 @@ export function CookieBanner() {
               accepter tous les cookies ou personnaliser vos préférences.
             </p>
 
+            {/* Vérification d'âge */}
+            <div className="mb-4 rounded-lg border-2 border-red-200 bg-red-50 p-4">
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={ageVerified}
+                  onChange={(e) => setAgeVerified(e.target.checked)}
+                  className="mt-1 h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-2 focus:ring-red-500"
+                  id="age-verification"
+                />
+                <label
+                  htmlFor="age-verification"
+                  className="flex-1 text-sm text-gray-900"
+                >
+                  <strong className="text-red-700">
+                    Je certifie avoir 18 ans ou plus
+                  </strong>{' '}
+                  et accepte d'accéder à un site de rencontre réservé aux
+                  adultes.
+                </label>
+              </div>
+            </div>
+
             <p className="mb-4 text-xs text-gray-500">
               En savoir plus :{' '}
               <Link
@@ -135,19 +170,22 @@ export function CookieBanner() {
             <div className="flex flex-col gap-2 sm:flex-row">
               <button
                 onClick={handleAcceptAll}
-                className="flex-1 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-pink-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                disabled={!ageVerified}
+                className={`flex-1 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-pink-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none ${!ageVerified ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Accepter tout
               </button>
               <button
                 onClick={handleAcceptEssential}
-                className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                disabled={!ageVerified}
+                className={`flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none ${!ageVerified ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Essentiel uniquement
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="rounded-lg border border-gray-300 bg-white p-2.5 text-gray-700 transition-all hover:bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none sm:w-auto"
+                disabled={!ageVerified}
+                className={`rounded-lg border border-gray-300 bg-white p-2.5 text-gray-700 transition-all hover:bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none sm:w-auto ${!ageVerified ? 'cursor-not-allowed opacity-50' : ''}`}
                 aria-label="Personnaliser les cookies"
               >
                 <Settings className="h-5 w-5" aria-hidden="true" />
