@@ -3,17 +3,14 @@ import { FilterDropdown } from '@/components/filterCards/filter-dropdown';
 import { Footer } from '@/components/footer/Footer';
 import { Navbar } from '@/components/navbar/navbar';
 import { ProductGrid } from '@/components/productsInMainPage/product-grid';
-import { getSession } from '@/lib/better-auth-setup/toolAuth';
 import { getCachedOrigins } from '@/lib/cache';
 import { Heart, Sparkles, Users } from 'lucide-react';
-import { Link } from 'next-view-transitions';
 
 interface HomeProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const session = await getSession();
   const params = await searchParams;
 
   // Récupérer les origines depuis la base de données (avec cache 1h)
@@ -117,17 +114,6 @@ export default async function Home({ searchParams }: HomeProps) {
             Rejoignez notre communauté et commencez votre histoire dès
             aujourd'hui
           </p>
-          {!session && (
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Link
-                href={'/chat/conseils-rencontre'}
-                className="rounded-full bg-white px-6 py-3 font-semibold text-purple-600 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:ring-4 focus:ring-white/50 focus:outline-none"
-                aria-label="Créer un compte pour commencer à rencontrer des personnes"
-              >
-                Créer mon profil
-              </Link>
-            </div>
-          )}
         </section>
       </main>
       <Footer />
