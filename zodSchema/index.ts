@@ -16,11 +16,13 @@ export const LoginSchema = z.object({
 //Schema pour l'inscription
 export const RegisterSchema = z
   .object({
-    email: z.email({
-      message: 'Veuillez entrer une adresse email valide',
-    }).min(6, {
-      message: "L'email est requis",
-    }),
+    email: z
+      .email({
+        message: 'Veuillez entrer une adresse email valide',
+      })
+      .min(6, {
+        message: "L'email est requis",
+      }),
     password: z.string().min(6, {
       message: 'Le mot de passe doit contenir au moins 6 caractères',
     }),
