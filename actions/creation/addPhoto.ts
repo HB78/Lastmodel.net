@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma-setup/db';
 import { getSession } from '@/tools';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 type ActionResult = {
   success: boolean;
@@ -72,6 +72,10 @@ export async function addPhotoAction(photoUrl: string): Promise<ActionResult> {
     revalidatePath('/profile/photos');
     revalidatePath('/profile');
     revalidatePath('/');
+
+    // Invalider le cache du profil individuel pour la page produit
+    revalidateTag(`profile-${session.user.id}`);
+    revalidateTag('profiles'); // Pour la liste des profils sur la page d'accueil
 
     return {
       success: true,
