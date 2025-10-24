@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma-setup/db';
 import { deleteFileFromS3 } from '@/lib/s3-setup/aws-s3-config';
 import { getSession } from '@/tools';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 type ActionResult = {
   success: boolean;
@@ -83,6 +83,10 @@ export async function deletePhotoAction(
     revalidatePath('/profile/photos'); // Page de gestion des photos
     revalidatePath('/profile'); // Page de profil principal
     revalidatePath('/'); // Page d'accueil (liste des profils)
+
+    // Invalider le cache du profil individuel pour la page produit
+    revalidateTag(`profile-${session.user.id}`);
+    revalidateTag('profiles'); // Pour la liste des profils sur la page d'accueil
 
     return {
       success: true,
