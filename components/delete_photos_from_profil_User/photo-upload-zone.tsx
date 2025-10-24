@@ -12,7 +12,7 @@ import { usePhotoManagement } from './photo-management';
 export function PhotoUploadZone() {
   const [isUploading, setIsUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const { optimisticPhotos } = usePhotoManagement();
+  const { optimisticPhotos, addPhoto } = usePhotoManagement();
   const router = useRouter();
 
   const handlePhotoUploaded = async (url: string) => {
@@ -20,10 +20,10 @@ export function PhotoUploadZone() {
       try {
         const result = await addPhotoAction(url);
 
-        if (result.success) {
+        if (result.success && result.photo) {
+          // Ajouter optimistiquement la vraie photo retournée par le serveur
+          addPhoto(result.photo);
           toast.success(result.message);
-          // Revalider la page pour afficher la nouvelle photo
-          router.refresh();
         } else {
           toast.error(result.error || result.message);
         }
