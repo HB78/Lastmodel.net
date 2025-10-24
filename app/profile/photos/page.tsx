@@ -4,7 +4,8 @@ import { PhotoUploadZone } from '@/components/delete_photos_from_profil_User/pho
 import { Button } from '@/components/ui/button';
 import { prisma } from '@/lib/prisma-setup/db';
 import { getSessionWithProfileCheck } from '@/tools';
-import { Camera, Upload } from 'lucide-react';
+import { Camera } from 'lucide-react';
+import { Link } from 'next-view-transitions';
 import { redirect } from 'next/navigation';
 
 export default async function PhotosPage() {
@@ -50,12 +51,8 @@ export default async function PhotosPage() {
         {/* Actions */}
         <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-4">
-            <Button variant="outline" asChild>
-              <a href="/profile">Retour au profil</a>
-            </Button>
             <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700">
-              <Upload className="mr-2 h-4 w-4" />
-              Sauvegarder les changements
+              <Link href="/profile">Retour au profil</Link>
             </Button>
           </div>
         </div>
