@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma-setup/db';
 import { getSession } from '@/tools';
 import { UpdateUserProfilSchema } from '@/zodSchema/updateUserSchema';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 type ActionResult = {
   error: string | null;
@@ -113,9 +113,11 @@ export async function updateUserProfileAction(
     });
 
     // Revalider les pages pour mettre à jour l'UI
-    // revalidatePath('/profile');
-    // revalidatePath('/profile/edit');
     revalidatePath('/', 'layout');
+
+    // Invalider le cache du profil individuel pour la page produit
+    revalidateTag(`profile-${session.user.id}`);
+    revalidateTag('profiles'); // Pour la liste des profils sur la page d'accueil
 
     return {
       error: null,

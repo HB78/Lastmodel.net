@@ -137,7 +137,10 @@ export async function createUserProfilAction(formData: FormData) {
     revalidatePath('/');
     revalidatePath('/profile');
     revalidatePath('/create');
-    revalidateTag('profiles');
+
+    // Invalider le cache du profil individuel pour la page produit
+    revalidateTag(`profile-${userId}`);
+    revalidateTag('profiles'); // Pour la liste des profils sur la page d'accueil
 
     return { error: null, user, status: 200 };
   } catch (error) {
