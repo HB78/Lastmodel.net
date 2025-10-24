@@ -1,5 +1,6 @@
 import { auth } from '@/lib/better-auth-setup/auth';
 import { prisma } from '@/lib/prisma-setup/db';
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -23,6 +24,8 @@ export async function POST(request: Request) {
     const origin = await prisma.origin.create({
       data: { name: name.trim() },
     });
+
+    revalidatePath('/');
 
     return NextResponse.json(origin, { status: 201 });
   } catch (error) {
