@@ -113,11 +113,11 @@ function appendCspHeaders(headers: Headers) {
     `
     : `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.posthog.com;
+      script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.posthog.com https://eu-assets.i.posthog.com;
       style-src 'self' 'unsafe-inline';
       img-src 'self' blob: data: https: https://*.stripe.com https://*.posthog.com;
       font-src 'self' data:;
-      connect-src 'self' https://lastmodel.net https://www.lastmodel.net https://api.stripe.com https://*.posthog.com;
+      connect-src 'self' https://lastmodel.net https://www.lastmodel.net https://api.stripe.com https://*.posthog.com https://eu-assets.i.posthog.com https://geo.api.gouv.fr;
       frame-src https://js.stripe.com https://hooks.stripe.com;
       object-src 'none';
       base-uri 'self';
