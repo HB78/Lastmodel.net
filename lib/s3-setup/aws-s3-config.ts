@@ -31,8 +31,13 @@ export async function uploadFileToS3(
 
   // 🔒 ÉTAPE 2: VALIDATION DU TYPE MIME
   // D'abord vérifier que le type MIME est autorisé
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'] as const;
-  type SupportedMimeType = typeof allowedTypes[number];
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/avif',
+  ] as const;
+  type SupportedMimeType = (typeof allowedTypes)[number];
 
   if (!allowedTypes.includes(file.type as SupportedMimeType)) {
     throw new Error(
