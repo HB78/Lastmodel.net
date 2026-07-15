@@ -1,10 +1,10 @@
 import { ErrorHandler } from '@/components/error-handler';
 import { FilterDropdown } from '@/components/filterCards/filter-dropdown';
 import { Footer } from '@/components/footer/Footer';
+import { HeroSection } from '@/components/hero/HeroSection';
 import { Navbar } from '@/components/navbar/navbar';
 import { ProductGrid } from '@/components/productsInMainPage/product-grid';
 import { getCachedOrigins } from '@/lib/cache';
-import { Heart, Sparkles, Users } from 'lucide-react';
 
 interface HomeProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,53 +18,15 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
-      <Navbar />
+      {/* Navbar transparente superposée à la vidéo de la hero */}
+      <div className="relative">
+        <Navbar transparent />
+        <HeroSection />
+      </div>
+
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* ✅ Gérer les erreurs depuis l'URL */}
         <ErrorHandler error={params.error} />
-
-        {/* Header Hero Section */}
-        <header className="mb-12 text-center">
-          <div
-            className="mb-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-medium text-purple-700"
-            role="banner"
-          >
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-            <span>Trouvez votre âme sœur</span>
-          </div>
-          <h1 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
-            Découvrez des
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {' '}
-              connexions{' '}
-            </span>
-            authentiques
-          </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-700">
-            Rencontrez des personnes qui partagent vos valeurs et aspirations.
-            Chaque profil raconte une histoire unique.
-          </p>
-
-          {/* Stats rapides */}
-          <div
-            className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8"
-            role="complementary"
-            aria-label="Statistiques de la communauté"
-          >
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <Users className="h-4 w-4 text-purple-600" aria-hidden="true" />
-              <span>
-                <strong>1000+</strong> membres actifs
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <Heart className="h-4 w-4 text-pink-600" aria-hidden="true" />
-              <span>
-                <strong>200+</strong> connexions par mois
-              </span>
-            </div>
-          </div>
-        </header>
 
         {/* Section Filtres */}
         <section className="mb-8" aria-label="Filtres de recherche">
