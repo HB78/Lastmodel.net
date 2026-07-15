@@ -2,7 +2,7 @@ import { CookieBanner } from '@/components/cookies/CookieBanner';
 import { PosthogProvider } from '@/posthog/posthogProvider/posthogProvider';
 import type { Metadata } from 'next';
 import { ViewTransitions } from 'next-view-transitions';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Playfair_Display, DM_Sans } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Toaster } from 'sonner';
 
@@ -16,6 +16,18 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+});
+
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['400', '600', '700', '800'],
+});
+
+const dmSans = DM_Sans({
+  variable: '--font-dm-sans',
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
 });
 
 export const metadata: Metadata = {
@@ -125,7 +137,7 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="fr">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${dmSans.variable} antialiased`}
         >
           <PosthogProvider>
             <Toaster position="top-center" richColors />

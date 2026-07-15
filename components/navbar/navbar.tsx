@@ -11,7 +11,7 @@ import { MobileDrawer } from './mobile-drawer';
 import { UserMenu } from './user-menu';
 
 // Composant interne pour éviter les problèmes d'hydratation
-function NavbarContent() {
+function NavbarContent({ transparent }: { transparent?: boolean }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, isPending } = useSession();
 
@@ -34,7 +34,11 @@ function NavbarContent() {
     //les composant nav en desktop et en responsive n'affichent pas de menu alternatif si !session
     <header role="banner">
       <nav
-        className="sticky top-0 z-50 border-b border-gray-200/50 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 shadow-sm backdrop-blur-md"
+        className={
+          transparent
+            ? 'absolute top-0 left-0 z-50 w-full border-b border-white/10 bg-white/5 backdrop-blur-sm'
+            : 'sticky top-0 z-50 border-b border-gray-200/50 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 shadow-sm backdrop-blur-md'
+        }
         role="navigation"
         aria-label="Navigation principale"
       >
@@ -56,9 +60,9 @@ function NavbarContent() {
                     className="transition-transform duration-200 hover:scale-110"
                     priority
                   />
-                  <h1 className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-all duration-200 hover:from-purple-700 hover:to-pink-700">
+                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text font-[family-name:var(--font-playfair)] text-2xl font-bold text-transparent transition-opacity duration-200 hover:opacity-80">
                     Lastmodel
-                  </h1>
+                  </span>
                 </Link>
               </div>
               {/* Navigation Desktop */}
@@ -134,6 +138,7 @@ function NavbarContent() {
                 userInitials={userInitials}
                 isOpen={isMenuOpen}
                 setIsOpen={setIsMenuOpen}
+                transparent={transparent}
               />
             </section>
           </div>
@@ -144,7 +149,7 @@ function NavbarContent() {
 }
 
 // Composant principal avec Suspense
-export function Navbar() {
+export function Navbar({ transparent }: { transparent?: boolean }) {
   return (
     <Suspense
       fallback={
@@ -165,9 +170,9 @@ export function Navbar() {
                       height={40}
                       priority
                     />
-                    <h1 className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent">
+                    <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent">
                       Lastmodel
-                    </h1>
+                    </span>
                   </div>
                 </div>
                 <div
@@ -181,7 +186,7 @@ export function Navbar() {
         </header>
       }
     >
-      <NavbarContent />
+      <NavbarContent transparent={transparent} />
     </Suspense>
   );
 }

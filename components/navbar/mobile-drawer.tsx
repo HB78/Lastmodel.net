@@ -41,6 +41,7 @@ interface MobileDrawerProps {
   userInitials: string;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  transparent?: boolean;
 }
 
 export function MobileDrawer({
@@ -48,7 +49,12 @@ export function MobileDrawer({
   userInitials,
   isOpen,
   setIsOpen,
+  transparent,
 }: MobileDrawerProps) {
+  // Sur navbar transparente (par-dessus la vidéo sombre), le hamburger doit être
+  // blanc pour rester visible. Sinon on garde le gris habituel des autres pages.
+  const barColor = transparent ? 'bg-white' : 'bg-gray-700';
+  const triggerHover = transparent ? 'hover:bg-white/10' : 'hover:bg-purple-50';
   return (
     <div className="md:hidden">
       <Drawer direction="left" open={isOpen} onOpenChange={setIsOpen}>
@@ -56,25 +62,25 @@ export function MobileDrawer({
           <Button
             variant="ghost"
             size="sm"
-            className="relative h-10 w-10 transition-colors hover:bg-purple-50"
+            className={`relative h-10 w-10 transition-colors ${triggerHover}`}
             aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
           >
             <div className="flex h-5 w-5 flex-col items-center justify-center gap-1">
               {/* Ligne du haut */}
               <span
-                className={`h-0.5 w-5 bg-gray-700 transition-all duration-300 ease-in-out ${
+                className={`h-0.5 w-5 ${barColor} transition-all duration-300 ease-in-out ${
                   isOpen ? 'rotate-45 translate-y-1.5' : ''
                 }`}
               />
               {/* Ligne du milieu */}
               <span
-                className={`h-0.5 w-5 bg-gray-700 transition-all duration-300 ease-in-out ${
+                className={`h-0.5 w-5 ${barColor} transition-all duration-300 ease-in-out ${
                   isOpen ? 'opacity-0' : 'opacity-100'
                 }`}
               />
               {/* Ligne du bas */}
               <span
-                className={`h-0.5 w-5 bg-gray-700 transition-all duration-300 ease-in-out ${
+                className={`h-0.5 w-5 ${barColor} transition-all duration-300 ease-in-out ${
                   isOpen ? '-rotate-45 -translate-y-1.5' : ''
                 }`}
               />
