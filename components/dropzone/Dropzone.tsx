@@ -53,8 +53,9 @@ export function DropZone({
     onDrop, // Fonction appelée quand des fichiers sont déposés
     maxSize: 1024 * 1024 * 10, // Taille maximale : 10MB
     accept: {
-      // Types de fichiers acceptés : toutes les images
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'],
+      // Types de fichiers acceptés : alignés sur les signatures validées côté serveur
+      // (jpeg, png, webp, avif). Pas de .gif : rejeté par validateFileContent.
+      'image/*': ['.png', '.jpg', '.jpeg', '.webp', '.avif'],
     },
     // Gestion des fichiers rejetés (trop gros, mauvais type, etc.)
     onDropRejected: (rejectedFiles) => {
