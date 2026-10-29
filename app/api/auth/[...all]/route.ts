@@ -81,6 +81,12 @@ export const { GET } = authHandlers;
  * 4. Si OK → passe à Better Auth pour traiter la requête
  */
 export async function POST(request: Request) {
+  // Webhook Stripe : on ne passe PAS par Arcjet (Stripe serait détecté comme bot → 403).
+  // La sécurité est assurée par Better Auth qui vérifie la signature Stripe (STRIPE_WEBHOOK_SECRET).
+  if (new URL(request.url).pathname === '/api/auth/stripe/webhook') {
+    return authHandlers.POST(request);
+  }
+
   // Clone la requête car le body ne peut être lu qu'une seule fois
   // checkArcjet() lira le body de l'original, Better Auth utilisera le clone
   const clonedRequest = request.clone();

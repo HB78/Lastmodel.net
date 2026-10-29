@@ -4,7 +4,8 @@
       "Bash(cat:*)",
       "Bash(rm:*)",
       "Read(//c/Users/batto/Desktop/projets/nowts/now.ts/**)",
-      "Read(//c/Users/batto/Desktop/projets/nowts/**)"
+      "Read(//c/Users/batto/Desktop/projets/nowts/**)",
+      "Bash(sort -t: -k2 -rn)"
     ],
     "deny": [],
     "ask": []
