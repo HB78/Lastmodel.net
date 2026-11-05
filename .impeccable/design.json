@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T16:06:57.495Z",
+  "title": "Design System: Lastmodel",
+  "extensions": {
+    "colorMeta": {
+      "masque-de-nuit": {
+        "role": "neutral",
+        "displayName": "Masque de Nuit",
+        "canonical": "oklch(29.1% 0.149 302.717)",
+        "tonalRamp": [
+          "oklch(15% 0.07 302.7)",
+          "oklch(22% 0.11 302.7)",
+          "oklch(29.1% 0.149 302.717)",
+          "oklch(38% 0.17 302.7)",
+          "oklch(50% 0.18 302.7)",
+          "oklch(65% 0.14 302.7)",
+          "oklch(80% 0.08 302.7)",
+          "oklch(95% 0.02 302.7)"
+        ]
+      },
+      "violet-bal": {
+        "role": "primary",
+        "displayName": "Violet de Bal",
+        "canonical": "oklch(55.8% 0.288 302.321)",
+        "tonalRamp": [
+          "oklch(15% 0.08 302.3)",
+          "oklch(29.1% 0.149 302.7)",
+          "oklch(43.8% 0.218 303.7)",
+          "oklch(55.8% 0.288 302.321)",
+          "oklch(62.7% 0.265 303.9)",
+          "oklch(71.4% 0.203 305.5)",
+          "oklch(82.7% 0.119 306.4)",
+          "oklch(97.7% 0.014 308.3)"
+        ]
+      },
+      "violet-bal-profond": {
+        "role": "primary",
+        "displayName": "Violet de Bal Profond",
+        "canonical": "oklch(49.6% 0.265 301.924)",
+        "tonalRamp": [
+          "oklch(15% 0.08 301.9)",
+          "oklch(25% 0.13 301.9)",
+          "oklch(38% 0.2 301.9)",
+          "oklch(49.6% 0.265 301.924)",
+          "oklch(60% 0.22 301.9)",
+          "oklch(72% 0.16 301.9)",
+          "oklch(84% 0.09 301.9)",
+          "oklch(95% 0.03 301.9)"
+        ]
+      },
+      "blanc-ivoire": {
+        "role": "neutral",
+        "displayName": "Blanc Ivoire",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(30% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(75% 0 0)",
+          "oklch(88% 0 0)",
+          "oklch(95% 0 0)",
+          "oklch(1 0 0)"
+        ]
+      },
+      "encre": {
+        "role": "neutral",
+        "displayName": "Encre",
+        "canonical": "oklch(0 0 0)",
+        "tonalRamp": [
+          "oklch(0 0 0)",
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(40% 0 0)",
+          "oklch(55% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "encre-grise": {
+        "role": "neutral",
+        "displayName": "Encre Grise",
+        "canonical": "oklch(21% 0.034 264.665)",
+        "tonalRamp": [
+          "oklch(13% 0.028 261.7)",
+          "oklch(21% 0.034 264.665)",
+          "oklch(27.8% 0.033 256.8)",
+          "oklch(37.3% 0.034 259.7)",
+          "oklch(44.6% 0.03 256.8)",
+          "oklch(55.1% 0.027 264.4)",
+          "oklch(70.7% 0.022 261.3)",
+          "oklch(92.8% 0.006 264.5)"
+        ]
+      },
+      "trait-gris": {
+        "role": "neutral",
+        "displayName": "Trait Gris",
+        "canonical": "oklch(92.8% 0.006 264.531)",
+        "tonalRamp": [
+          "oklch(21% 0.034 264.7)",
+          "oklch(37.3% 0.034 259.7)",
+          "oklch(55.1% 0.027 264.4)",
+          "oklch(70.7% 0.022 261.3)",
+          "oklch(87.2% 0.01 258.3)",
+          "oklch(92.8% 0.006 264.531)",
+          "oklch(96.7% 0.003 264.5)",
+          "oklch(98.5% 0.002 247.8)"
+        ]
+      },
+      "nuit-profonde": {
+        "role": "neutral",
+        "displayName": "Nuit Profonde",
+        "canonical": "oklch(18% 0.075 302.7)",
+        "tonalRamp": [
+          "oklch(10% 0.04 302.7)",
+          "oklch(18% 0.075 302.7)",
+          "oklch(26% 0.1 302.7)",
+          "oklch(36% 0.12 302.7)",
+          "oklch(50% 0.12 302.7)",
+          "oklch(65% 0.09 302.7)",
+          "oklch(80% 0.05 302.7)",
+          "oklch(95% 0.015 302.7)"
+        ]
+      },
+      "voile-ivoire": {
+        "role": "neutral",
+        "displayName": "Voile d'Ivoire",
+        "canonical": "oklch(98.2% 0.004 302)",
+        "tonalRamp": [
+          "oklch(20% 0.01 302)",
+          "oklch(35% 0.01 302)",
+          "oklch(50% 0.008 302)",
+          "oklch(65% 0.007 302)",
+          "oklch(80% 0.006 302)",
+          "oklch(90% 0.005 302)",
+          "oklch(95% 0.004 302)",
+          "oklch(98.2% 0.004 302)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titre de la hero uniquement, un par page, en blanc sur le voile de nuit."
+      },
+      "brand": {
+        "displayName": "Marque",
+        "purpose": "Mot-symbole « Lastmodel » de la navbar."
+      },
+      "lead": {
+        "displayName": "Accroche",
+        "purpose": "Une phrase sous le titre display, blanc à 75 %."
+      },
+      "body": {
+        "displayName": "Texte courant",
+        "purpose": "Tout le texte de l'interface."
+      },
+      "label": {
+        "displayName": "Libellé",
+        "purpose": "Boutons, badges, libellés de champs."
+      }
+    },
+    "shadows": [
+      {
+        "name": "survol-carte",
+        "value": "0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1)",
+        "purpose": "Uniquement au survol d'une carte de profil, jamais au repos."
+      }
+    ],
+    "motion": [
+      {
+        "name": "transition-etat",
+        "value": "200ms ease",
+        "purpose": "Opacité et couleur des boutons au survol."
+      },
+      {
+        "name": "zoom-photo",
+        "value": "transform 300ms ease",
+        "purpose": "Zoom de 5 % de la photo d'une carte au survol (appareils avec survol)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pilule blanche, l'action principale d'une zone sur fond de nuit.",
+      "html": "<div class=\"ds-night\"><a class=\"ds-btn-primary\" href=\"#\">Créer mon profil</a></div>",
+      "css": ".ds-night { background: oklch(29.1% 0.149 302.717); padding: 32px; display: flex; gap: 12px; justify-content: center; } .ds-btn-primary { display: inline-block; background: oklch(1 0 0); color: oklch(0 0 0); padding: 16px 40px; border-radius: 9999px; font: 600 0.875rem/1.43 Geist, system-ui, sans-serif; text-decoration: none; transition: opacity 200ms ease; } .ds-btn-primary:hover { opacity: 0.8; } .ds-btn-primary:focus-visible { outline: 2px solid oklch(1 0 0); outline-offset: 4px; }"
+    },
+    {
+      "name": "Bouton contour",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Pilule contour fin, action secondaire à côté du bouton principal.",
+      "html": "<div class=\"ds-night\"><a class=\"ds-btn-ghost\" href=\"#\">Voir les tarifs</a></div>",
+      "css": ".ds-night { background: oklch(29.1% 0.149 302.717); padding: 32px; display: flex; justify-content: center; } .ds-btn-ghost { display: inline-block; background: transparent; color: oklch(1 0 0); border: 1px solid oklch(1 0 0 / 0.6); padding: 12px 32px; border-radius: 9999px; font: 600 0.875rem/1.43 Geist, system-ui, sans-serif; text-decoration: none; transition: background 200ms ease; } .ds-btn-ghost:hover { background: oklch(1 0 0 / 0.1); } .ds-btn-ghost:focus-visible { outline: 2px solid oklch(1 0 0); outline-offset: 4px; }"
+    },
+    {
+      "name": "Pilule de Nuit",
+      "kind": "button",
+      "refersTo": "button-night",
+      "description": "Action principale sur le fond clair (Voile d'Ivoire).",
+      "html": "<div class=\"ds-day\"><a class=\"ds-btn-night\" href=\"#\">Créer mon profil</a></div>",
+      "css": ".ds-day { background: oklch(98.2% 0.004 302); padding: 32px; display: flex; justify-content: center; } .ds-btn-night { display: inline-block; background: oklch(29.1% 0.149 302.717); color: oklch(1 0 0); padding: 12px 24px; border-radius: 9999px; font: 600 0.875rem/1.43 Geist, system-ui, sans-serif; text-decoration: none; transition: background 200ms ease; } .ds-btn-night:hover { background: oklch(18% 0.075 302.7); } .ds-btn-night:focus-visible { outline: 2px solid oklch(29.1% 0.149 302.717); outline-offset: 2px; }"
+    },
+    {
+      "name": "Titre de hero",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Le geste typographique du système : Playfair blanc sur le voile de nuit.",
+      "html": "<div class=\"ds-hero\"><h1 class=\"ds-display\">Le mystère commence ici</h1><p class=\"ds-lead\">Rencontres élégantes et authentiques, pour ceux qui osent.</p></div>",
+      "css": ".ds-hero { background: oklch(29.1% 0.149 302.717); padding: 48px 24px; text-align: center; color: oklch(1 0 0); } .ds-display { font: 700 clamp(2.5rem, 6vw, 4.5rem)/1.25 'Playfair Display', Georgia, serif; letter-spacing: -0.025em; margin: 0 0 16px; text-wrap: balance; } .ds-lead { font: 300 1.125rem/1.55 'DM Sans', system-ui, sans-serif; color: oklch(1 0 0 / 0.75); max-width: 28rem; margin: 0 auto; }"
+    },
+    {
+      "name": "Contrôle vidéo",
+      "kind": "custom",
+      "refersTo": "video-control",
+      "description": "Bouton pause/lecture rond de la hero, composant signature.",
+      "html": "<div class=\"ds-night ds-video\"><button class=\"ds-video-control\" type=\"button\" aria-label=\"Mettre la vidéo de fond en pause\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\"/><rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\"/></svg></button></div>",
+      "css": ".ds-night { background: oklch(29.1% 0.149 302.717); } .ds-video { position: relative; height: 140px; } .ds-video-control { position: absolute; right: 16px; bottom: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 9999px; border: 1px solid oklch(1 0 0 / 0.3); background: oklch(0 0 0 / 0.3); color: oklch(1 0 0); backdrop-filter: blur(4px); cursor: pointer; transition: background 200ms ease; } .ds-video-control:hover { background: oklch(0 0 0 / 0.5); } .ds-video-control:focus-visible { outline: 2px solid oklch(1 0 0); outline-offset: 2px; }"
+    },
+    {
+      "name": "Carte de profil",
+      "kind": "card",
+      "refersTo": "profile-card",
+      "description": "Carte de la grille d'accueil : la photo d'abord, l'interface en retrait.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-photo\"></div><div class=\"ds-card-body\"><p class=\"ds-card-name\">Léa</p><span class=\"ds-chip\">24 ans</span> <span class=\"ds-chip\">Lyon</span></div></a>",
+      "css": ".ds-card { display: block; width: 240px; border: 2px solid oklch(92.8% 0.006 264.531); border-radius: 10px; overflow: hidden; background: oklch(1 0 0); text-decoration: none; transition: box-shadow 300ms ease, border-color 300ms ease; } .ds-card:hover { box-shadow: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1); border-color: oklch(90.2% 0.063 306.703); } .ds-card:focus-visible { outline: 2px solid oklch(55.8% 0.288 302.321); outline-offset: 2px; } .ds-card-photo { aspect-ratio: 1; background: linear-gradient(oklch(29.1% 0.149 302.717 / 0.5), oklch(29.1% 0.149 302.717 / 0.5)), oklch(38% 0.17 302.7); } .ds-card-body { padding: 16px; } .ds-card-name { margin: 0 0 8px; font: 600 1.125rem/1.4 Geist, system-ui, sans-serif; color: oklch(21% 0.034 264.665); } .ds-chip { display: inline-block; padding: 4px 8px; border-radius: 9999px; background: oklch(96.7% 0.003 264.542); color: oklch(37.3% 0.034 259.733); font: 400 0.75rem/1.33 Geist, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Champ de saisie",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Champ de filtre ou de formulaire sur surface claire.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Ville\" aria-label=\"Ville\">",
+      "css": ".ds-input { height: 36px; padding: 0 12px; border: 1px solid oklch(87.2% 0.01 258.3); border-radius: 10px; background: oklch(1 0 0); color: oklch(21% 0.034 264.665); font: 400 1rem/1.5 Geist, system-ui, sans-serif; outline: none; } .ds-input::placeholder { color: oklch(55.1% 0.027 264.4); } .ds-input:focus-visible { box-shadow: 0 0 0 2px oklch(82.7% 0.119 306.4); } @media (pointer: coarse) { .ds-input { height: 44px; } }"
+    },
+    {
+      "name": "Navigation transparente",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Navbar superposée à la hero : verre très léger, marque Playfair blanche.",
+      "html": "<div class=\"ds-night ds-nav-wrap\"><nav class=\"ds-nav\"><span class=\"ds-brand\">Lastmodel</span><a class=\"ds-nav-link\" href=\"#\">Se connecter</a></nav></div>",
+      "css": ".ds-night { background: oklch(29.1% 0.149 302.717); } .ds-nav-wrap { padding-bottom: 48px; } .ds-nav { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 24px; background: oklch(1 0 0 / 0.05); border-bottom: 1px solid oklch(1 0 0 / 0.1); backdrop-filter: blur(4px); } .ds-brand { font: 700 1.5rem/1.33 'Playfair Display', Georgia, serif; color: oklch(1 0 0); } .ds-nav-link { color: oklch(1 0 0 / 0.8); font: 500 0.875rem/1.43 Geist, system-ui, sans-serif; text-decoration: none; } .ds-nav-link:hover { color: oklch(1 0 0); } .ds-nav-link:focus-visible { outline: 2px solid oklch(1 0 0); outline-offset: 4px; border-radius: 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le Bal Masqué",
+    "overview": "Lastmodel se vit comme une soirée masquée : la lumière est basse, les visages se devinent, et chaque élément de l'interface se tient en retrait pour laisser les personnes et les images occuper la scène. L'élégance vient de la retenue (peu de couleurs, peu d'effets, beaucoup d'espace) et d'un seul geste typographique fort : la serif Playfair Display, en grand et en blanc, sur un voile violet profond.\n\nL'interface est un écrin, pas un décor. Les photos et la vidéo portent l'émotion ; les boutons, cartes et champs sont raffinés et retenus (contours fins, ombres rares, accent violet utilisé avec parcimonie). Le mystère se construit par ce qui est montré à moitié : voiles, superpositions, contrastes doux, jamais par des effets tape-à-l'œil.\n\nRejet confirmé : l'univers pastel « romantique » (fonds dégradés violet/rose/indigo, texte et boutons en dégradé violet→rose) qui couvre encore une partie du site. Il est remplacé progressivement par cet univers.",
+    "keyCharacteristics": [
+      "Nuit et voile : violet très profond posé sur l'image, texte blanc par-dessus.",
+      "Une serif de caractère (Playfair Display) pour les titres et la marque, une sans-serif neutre (Geist) pour tout le reste.",
+      "Accent violet rare, jamais en dégradé.",
+      "Boutons en pilule : blanc plein pour l'action principale, contour fin pour la secondaire.",
+      "Plat par défaut : la profondeur vient des superpositions, pas des ombres."
+    ],
+    "rules": [
+      {
+        "name": "La Règle de la Nuit Encadrée",
+        "body": "Une page publique s'ouvre et se ferme sur la nuit (hero en haut ; bandeau d'action et footer en bas). Entre les deux, le contenu repose sur le Voile d'Ivoire. Jamais de nuit au milieu du contenu : elle encadre, elle ne coupe pas.",
+        "section": "colors"
+      },
+      {
+        "name": "La Règle du Violet Rare",
+        "body": "L'accent violet couvre moins de 10 % d'un écran et ne sert qu'aux états : focus, filtre actif, survol d'une carte. Jamais pour décorer (icônes, badges, fonds de survol de liste : ils restent en gris). Sa rareté fait son élégance ; s'il apparaît partout, il ne signale plus rien.",
+        "section": "colors"
+      },
+      {
+        "name": "La Règle Sans Dégradé",
+        "body": "Aucun dégradé de couleur sur le texte, les boutons ou les fonds. La seule superposition autorisée est le voile uni Masque de Nuit sur une image.",
+        "section": "colors"
+      },
+      {
+        "name": "La Règle d'une Seule Voix",
+        "body": "Playfair est réservée au titre display et à la marque. Les titres de section, cartes et formulaires restent en Geist : si la serif est partout, le bal n'a plus de lustre.",
+        "section": "typography"
+      },
+      {
+        "name": "La Règle du Voile",
+        "body": "Pour séparer un plan d'un autre, superposer (voile, verre) plutôt qu'ombrer. Une ombre est une réponse à un geste, pas un état permanent.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do poser le texte sur l'image avec un voile Masque de Nuit à 50 %, jamais directement sur une photo ou une vidéo.",
+      "Do utiliser le blanc à 75–80 % d'opacité pour les textes secondaires sur fond de nuit.",
+      "Do garder une seule action principale (pilule blanche) par zone, accompagnée au plus d'une pilule contour.",
+      "Do laisser les photos occuper la place : la carte de profil s'efface derrière son image.",
+      "Do dessiner les icônes avec Lucide (trait régulier), jamais avec des emojis."
+    ],
+    "donts": [
+      "Don't utiliser de dégradé violet→rose, ni sur le texte, ni sur les boutons, ni en fond de page. C'est l'héritage pastel à retirer (déjà retiré de l'accueil et du footer ; reste : navbar hors accueil, menu mobile, autres pages).",
+      "Don't utiliser les fonds pastel violet/rose/indigo (from-purple-50 via-pink-50 to-indigo-50) sur de nouvelles surfaces.",
+      "Don't utiliser Playfair pour autre chose que le titre display et la marque.",
+      "Don't ajouter de sur-titre (petit libellé en capitales au-dessus d'un titre) : le titre parle seul. Le « LASTMODEL » au-dessus du titre de la hero est un héritage à retirer.",
+      "Don't mettre d'ombre sur une surface au repos.",
+      "Don't utiliser d'emojis comme icônes (👨 👩 📍 📷 dans les cartes actuelles : à remplacer).",
+      "Don't colorer les badges selon leur contenu (bleu pour l'âge, vert pour le genre…) : un badge informe, il ne catégorise pas."
+    ]
+  }
+}

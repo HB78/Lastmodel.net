@@ -2,7 +2,7 @@ import { CookieBanner } from '@/components/cookies/CookieBanner';
 import { PosthogProvider } from '@/posthog/posthogProvider/posthogProvider';
 import type { Metadata } from 'next';
 import { ViewTransitions } from 'next-view-transitions';
-import { Geist, Geist_Mono, Playfair_Display, DM_Sans } from 'next/font/google';
+import { Geist, Playfair_Display, DM_Sans } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Toaster } from 'sonner';
 
@@ -13,21 +13,23 @@ const geistSans = Geist({
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
+// ⚡ Polices : on ne charge QUE les graisses réellement utilisées
+// (chaque graisse = un fichier de plus à télécharger)
+// - Geist Mono retirée : utilisée nulle part sur le site
+// - Playfair : 600 (sur-titre de la hero) et 700 (titre hero + logo navbar)
+// - DM Sans : 300 (sous-titre de la hero)
+// ⚠️ Si tu utilises une autre graisse plus tard (ex: font-medium avec
+// Playfair), ajoute-la ici, sinon le navigateur la "fabrique" et c'est moche.
 const playfair = Playfair_Display({
   variable: '--font-playfair',
   subsets: ['latin'],
-  weight: ['400', '600', '700', '800'],
+  weight: ['600', '700'],
 });
 
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
+  weight: ['300'],
 });
 
 export const metadata: Metadata = {
@@ -137,7 +139,7 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="fr">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${dmSans.variable} antialiased`}
+          className={`${geistSans.variable} ${playfair.variable} ${dmSans.variable} antialiased`}
         >
           <PosthogProvider>
             <Toaster position="top-center" richColors />

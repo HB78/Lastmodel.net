@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma-setup/db';
+import Link from 'next/link';
 import { ProductCard } from './product-card';
 
 // 🎯 Interface pour typer les filtres reçus de la page
@@ -60,6 +61,10 @@ const fetchProducts = async (filters: Filters = {}) => {
 
   const products = await prisma.user.findMany({
     where: whereClause,
+    // 🆕 Les plus récents d'abord : la page affiche "Triés par : Nouveaux
+    // profils". Sans orderBy, l'ordre était celui que la base voulait bien
+    // renvoyer (arbitraire) → le libellé mentait.
+    orderBy: { createdAt: 'desc' },
     select: {
       id: true,
       name: true,
@@ -96,18 +101,115 @@ export async function ProductGrid({ filters = {} }: ProductGridProps) {
     sex: typeof filters.sex === 'string' ? filters.sex : undefined,
   };
 
-  // 🎯 Fetch les produits avec les filtres appliqués
-  const products = await fetchProducts(cleanFilters);
+  // Un filtre est-il actif ? (sert à choisir le bon message si la liste est vide)
+  const hasActiveFilters = Object.values(cleanFilters).some(Boolean);
 
+  // 🎯 Fetch les produits avec les filtres appliqués
+  // 🛡️ Si la base ne répond pas (coupure Neon, timeout…), on affiche un
+  // message dans la grille au lieu de faire planter TOUTE la page d'accueil
+  // (la hero, les filtres et le footer restent utilisables).
+  let products: Awaited<ReturnType<typeof fetchProducts>>;
+  try {
+    products = await fetchProducts(cleanFilters);
+  } catch (error) {
+    console.error('Erreur lors du chargement des profils:', error);
+    return (
+      <GridMessage
+        title="Les profils n'ont pas pu être chargés"
+        text="Un problème temporaire nous empêche d'afficher les profils. Réessayez dans quelques instants."
+        actionHref="/"
+        actionLabel="Réessayer"
+      />
+    );
+  }
+
+  // 📭 ÉTAT VIDE : avant, la grille restait simplement blanche
+  if (products.length === 0) {
+    return hasActiveFilters ? (
+      <GridMessage
+        title="Aucun profil ne correspond à ces filtres"
+        text="Élargissez votre recherche : une autre ville, une autre tranche d'âge…"
+        actionHref="/"
+        actionLabel="Voir tous les profils"
+      />
+    ) : (
+      <GridMessage
+        title="Aucun profil pour le moment"
+        text="Créez le vôtre : il apparaîtra ici dès que vous passerez Premium ou VIP."
+        actionHref="/signup"
+        actionLabel="Créer mon profil"
+      />
+    );
+  }
+
+  // <ul> + <li> (dans ProductCard) : une vraie liste, que les lecteurs
+  // d'écran annoncent avec son nombre d'éléments ("liste, 12 éléments")
+  // 📱 1 colonne sur téléphone (choix voulu : chaque photo en grand),
+  // 2 dès 640px, 3 dès 1024px. Le squelette ProductGridSkeleton plus bas
+  // doit garder la même grille (sinon saut de mise en page au chargement).
   return (
-    <section
+    <ul
       className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-      role="region"
-      aria-label="Liste des produits"
+      aria-label="Profils"
     >
       {products.map((product) => (
         <ProductCard key={product.id} {...product} />
       ))}
-    </section>
+    </ul>
+  );
+}
+
+// 💬 Message affiché à la place de la grille (liste vide ou erreur)
+// "/" = retour à l'accueil SANS paramètres d'URL → efface tous les filtres
+function GridMessage({
+  title,
+  text,
+  actionHref,
+  actionLabel,
+}: {
+  title: string;
+  text: string;
+  actionHref: string;
+  actionLabel: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white px-6 py-12 text-center">
+      <p className="text-lg font-semibold text-gray-900">{title}</p>
+      <p className="mx-auto mt-2 max-w-md text-gray-700">{text}</p>
+      <Link
+        href={actionHref}
+        className="mt-6 inline-flex rounded-full bg-nuit px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-nuit-profonde focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nuit"
+      >
+        {actionLabel}
+      </Link>
+    </div>
+  );
+}
+
+// ⏳ SQUELETTE affiché pendant le chargement des profils (voir app/page.tsx,
+// <Suspense fallback={<ProductGridSkeleton />}>). La hero et les filtres
+// s'affichent tout de suite, sans attendre la base de données.
+// Même grille et même forme que les vraies cartes → pas de saut de mise en page.
+export function ProductGridSkeleton() {
+  return (
+    <div
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      role="status"
+      aria-label="Chargement des profils"
+    >
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div
+          key={index}
+          className="overflow-hidden rounded-xl border-2 border-gray-100 bg-white"
+          aria-hidden="true"
+        >
+          <div className="aspect-square w-full animate-pulse bg-gray-100 motion-reduce:animate-none" />
+          <div className="space-y-3 p-4">
+            <div className="h-5 w-2/3 animate-pulse rounded bg-gray-100 motion-reduce:animate-none" />
+            <div className="h-5 w-full animate-pulse rounded bg-gray-100 motion-reduce:animate-none" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

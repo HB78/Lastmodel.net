@@ -7,7 +7,6 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,6 +40,17 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* 🎭 UNIVERS "LE BAL MASQUÉ" (voir DESIGN.md)
+     Utilisables comme classes Tailwind : bg-nuit, text-nuit, bg-ivoire…
+     - nuit          : le voile de la hero, fond du bandeau final
+     - nuit-profonde : fond du footer (la nuit qui ferme la page)
+     - ivoire        : fond clair de la page, entre la hero et le bandeau
+                       (à peine teinté de violet pour que les cartes
+                       blanches s'en détachent) */
+  --color-nuit: oklch(29.1% 0.149 302.717);
+  --color-nuit-profonde: oklch(18% 0.075 302.7);
+  --color-ivoire: oklch(98.2% 0.004 302);
 }
 
 :root {
@@ -122,19 +132,21 @@
 }
 
 /* Styles personnalisés pour ton app de rencontre */
-.gradient-text {
-  @apply bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent;
-}
-
-.gradient-bg {
-  @apply bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50;
-}
+/* (.gradient-text et .gradient-bg supprimées : utilisées nulle part, et
+   interdites par DESIGN.md → "La Règle Sans Dégradé") */
 
 .card-hover {
   @apply transition-all duration-200 hover:scale-105 hover:shadow-lg;
 }
 
-/* Scrollbar personnalisée */
+/* Sélection de texte : la couleur de la nuit plutôt que le bleu par défaut
+   du navigateur (DESIGN.md, "Le Bal Masqué") */
+::selection {
+  background-color: var(--color-nuit);
+  color: white;
+}
+
+/* Scrollbar personnalisée (neutre : le violet est réservé aux états) */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -144,11 +156,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-purple-300;
+  @apply rounded-full bg-gray-300;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-purple-400;
+  @apply bg-gray-400;
 }
 
 

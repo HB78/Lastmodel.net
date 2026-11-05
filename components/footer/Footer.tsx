@@ -12,7 +12,7 @@ import Image from 'next/image';
 export function Footer() {
   return (
     <footer
-      className="border-t border-gray-200/60 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50"
+      className="bg-nuit-profonde text-white/70"
       role="contentinfo"
       aria-label="Pied de page du site"
     >
@@ -31,17 +31,17 @@ export function Footer() {
                 />
                 <h3
                   id="footer-about"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-xl font-bold text-transparent"
+                  className="font-[family-name:var(--font-playfair)] text-xl font-bold text-white"
                 >
                   Lastmodel
                 </h3>
               </Link>
-              <p className="mb-4 text-sm leading-relaxed text-gray-600">
+              <p className="mb-4 text-sm leading-relaxed text-white/70">
                 Le site de rencontre moderne avec des profils vérifiés pour des
                 rencontres authentiques.
               </p>
               <div
-                className="inline-flex items-center gap-2 rounded-full bg-purple-100 px-3 py-1.5 text-sm font-medium text-purple-700"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-sm font-medium text-white/80"
                 role="note"
                 aria-label="Avantage principal"
               >
@@ -54,7 +54,7 @@ export function Footer() {
             <section aria-labelledby="footer-links">
               <h3
                 id="footer-links"
-                className="mb-4 text-sm font-semibold tracking-wider text-gray-900 uppercase"
+                className="mb-4 text-sm font-semibold tracking-wider text-white uppercase"
               >
                 Liens utiles
               </h3>
@@ -62,11 +62,11 @@ export function Footer() {
                 <li>
                   <Link
                     href="/pricing"
-                    className="group inline-flex items-center gap-2 rounded text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="group inline-flex items-center gap-2 rounded text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Consulter les plans et tarifs"
                   >
                     <Sparkles
-                      className="h-4 w-4 transition-colors group-hover:text-purple-600"
+                      className="h-4 w-4 transition-colors group-hover:text-white"
                       aria-hidden="true"
                     />
                     <span className="font-medium">Plans et tarifs</span>
@@ -75,11 +75,11 @@ export function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="group inline-flex items-center gap-2 rounded text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="group inline-flex items-center gap-2 rounded text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Nous contacter"
                   >
                     <Mail
-                      className="h-4 w-4 transition-colors group-hover:text-purple-600"
+                      className="h-4 w-4 transition-colors group-hover:text-white"
                       aria-hidden="true"
                     />
                     <span className="font-medium">Contact</span>
@@ -88,11 +88,11 @@ export function Footer() {
                 <li>
                   <Link
                     href="/chat/faq"
-                    className="group inline-flex items-center gap-2 rounded text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="group inline-flex items-center gap-2 rounded text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Consulter la foire aux questions"
                   >
                     <HelpCircle
-                      className="h-4 w-4 transition-colors group-hover:text-purple-600"
+                      className="h-4 w-4 transition-colors group-hover:text-white"
                       aria-hidden="true"
                     />
                     <span className="font-medium">FAQ</span>
@@ -105,7 +105,7 @@ export function Footer() {
             <section aria-labelledby="footer-guides">
               <h3
                 id="footer-guides"
-                className="mb-4 text-sm font-semibold tracking-wider text-gray-900 uppercase"
+                className="mb-4 text-sm font-semibold tracking-wider text-white uppercase"
               >
                 Guides et conseils
               </h3>
@@ -113,11 +113,11 @@ export function Footer() {
                 <li>
                   <Link
                     href="/chat/guide-profil"
-                    className="group inline-flex items-center gap-2 rounded text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="group inline-flex items-center gap-2 rounded text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Lire le guide du profil parfait"
                   >
                     <BookOpen
-                      className="h-4 w-4 transition-colors group-hover:text-purple-600"
+                      className="h-4 w-4 transition-colors group-hover:text-white"
                       aria-hidden="true"
                     />
                     <span className="font-medium">Guide du profil parfait</span>
@@ -126,11 +126,11 @@ export function Footer() {
                 <li>
                   <Link
                     href="/chat/conseils-rencontre"
-                    className="group inline-flex items-center gap-2 rounded text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="group inline-flex items-center gap-2 rounded text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Lire les conseils pour réussir vos rencontres"
                   >
                     <Heart
-                      className="h-4 w-4 transition-colors group-hover:text-purple-600"
+                      className="h-4 w-4 transition-colors group-hover:text-white"
                       aria-hidden="true"
                     />
                     <span className="font-medium">Conseils rencontre</span>
@@ -139,11 +139,11 @@ export function Footer() {
                 <li>
                   <Link
                     href="/chat/securite"
-                    className="group inline-flex items-center gap-2 rounded text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="group inline-flex items-center gap-2 rounded text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="En savoir plus sur la sécurité et la confidentialité"
                   >
                     <Shield
-                      className="h-4 w-4 transition-colors group-hover:text-purple-600"
+                      className="h-4 w-4 transition-colors group-hover:text-white"
                       aria-hidden="true"
                     />
                     <span className="font-medium">
@@ -158,7 +158,7 @@ export function Footer() {
             <section aria-labelledby="footer-legal">
               <h3
                 id="footer-legal"
-                className="mb-4 text-sm font-semibold tracking-wider text-gray-900 uppercase"
+                className="mb-4 text-sm font-semibold tracking-wider text-white uppercase"
               >
                 Informations légales
               </h3>
@@ -166,7 +166,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/legal/mentions-legales"
-                    className="inline-block rounded font-medium text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="inline-block rounded font-medium text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Consulter les mentions légales"
                   >
                     Mentions légales
@@ -175,7 +175,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/legal/politique-confidentialite"
-                    className="inline-block rounded font-medium text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="inline-block rounded font-medium text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Consulter la politique de confidentialité"
                   >
                     Politique de confidentialité
@@ -184,7 +184,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/legal/conditions-utilisation"
-                    className="inline-block rounded font-medium text-gray-600 transition-all duration-200 hover:translate-x-1 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                    className="inline-block rounded font-medium text-white/70 transition-all duration-200 hover:translate-x-1 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                     aria-label="Consulter les conditions générales d'utilisation"
                   >
                     Conditions d'utilisation
@@ -194,7 +194,7 @@ export function Footer() {
             </section>
           </div>
           <p>
-            Lastmodel.com est un site d'informations, de rencontre et de
+            Lastmodel.net est un site d'informations, de rencontre et de
             publicités. Nous sommes simplement et uniquement un site commercial,
             nous ne sommes pas une agence d'escortes ou offrant des services de
             prostitution.
@@ -203,7 +203,7 @@ export function Footer() {
 
         {/* Séparateur */}
         <div
-          className="my-10 border-t border-gray-200/70"
+          className="my-10 border-t border-white/10"
           role="separator"
           aria-hidden="true"
         />
@@ -214,9 +214,9 @@ export function Footer() {
           role="contentinfo"
           aria-label="Informations de copyright et liens rapides"
         >
-          <p className="text-gray-600">
+          <p className="text-white/70">
             © {new Date().getFullYear()}{' '}
-            <span className="font-semibold text-gray-900">Lastmodel</span>. Tous
+            <span className="font-semibold text-white">Lastmodel</span>. Tous
             droits réservés.
           </p>
           <nav aria-label="Liens d'assistance rapide">
@@ -224,17 +224,17 @@ export function Footer() {
               <li>
                 <Link
                   href="/chat/faq"
-                  className="rounded font-medium text-gray-600 transition-colors duration-200 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                  className="rounded font-medium text-white/70 transition-colors duration-200 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                   aria-label="Obtenir de l'aide via la FAQ"
                 >
                   Aide
                 </Link>
               </li>
-              <li className="text-gray-300">•</li>
+              <li className="text-white/40" aria-hidden="true">•</li>
               <li>
                 <Link
                   href="/contact"
-                  className="rounded font-medium text-gray-600 transition-colors duration-200 hover:text-purple-600 focus:text-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+                  className="rounded font-medium text-white/70 transition-colors duration-200 hover:text-white focus:text-white focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-nuit-profonde focus:outline-none"
                   aria-label="Contacter le support technique"
                 >
                   Support

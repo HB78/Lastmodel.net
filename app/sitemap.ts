@@ -10,8 +10,14 @@ import 'server-only';
 const getProfilesForSitemap = unstable_cache(
   async () => {
     return await prisma.user.findMany({
+      // ⚠️ Mêmes règles que la grille de l'accueil (product-grid.tsx) :
+      // le sitemap dit à Google quelles pages indexer. Sans ces filtres,
+      // les profils FREE (censés être invisibles) et les comptes sans
+      // profil rempli apparaissaient dans les résultats de recherche.
       where: {
         emailVerified: true, // Seulement les profils avec email vérifié
+        subscriptionType: { not: 'FREE' }, // Seulement les abonnés Premium/VIP
+        photos: { some: { isMain: true } }, // Seulement les profils avec une photo
       },
       select: {
         id: true,
@@ -29,7 +35,7 @@ const getProfilesForSitemap = unstable_cache(
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = (
-    process.env.NEXT_PUBLIC_APP_URL || 'https://lastmodel.com'
+    process.env.NEXT_PUBLIC_APP_URL || 'https://lastmodel.net'
   ).replace(/\/$/, '');
 
   // Récupère les profils depuis le cache (ou BDD si cache expiré)

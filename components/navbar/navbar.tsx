@@ -60,13 +60,22 @@ function NavbarContent({ transparent }: { transparent?: boolean }) {
                     className="transition-transform duration-200 hover:scale-110"
                     priority
                   />
-                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text font-[family-name:var(--font-playfair)] text-2xl font-bold text-transparent transition-opacity duration-200 hover:opacity-80">
+                  {/* Sur la vidéo (transparent) : texte blanc uni. Le dégradé
+                      violet/rose était illisible sur le voile violet foncé
+                      de la hero (contraste trop faible, WCAG 1.4.3). */}
+                  <span
+                    className={
+                      transparent
+                        ? 'font-[family-name:var(--font-playfair)] text-2xl font-bold text-white transition-opacity duration-200 hover:opacity-80'
+                        : 'bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text font-[family-name:var(--font-playfair)] text-2xl font-bold text-transparent transition-opacity duration-200 hover:opacity-80'
+                    }
+                  >
                     Lastmodel
                   </span>
                 </Link>
               </div>
               {/* Navigation Desktop */}
-              <DesktopNav session={session} />
+              <DesktopNav session={session} transparent={transparent} />
             </div>
 
             {/* Actions utilisateur */}
@@ -78,7 +87,7 @@ function NavbarContent({ transparent }: { transparent?: boolean }) {
               <div className="hidden items-center space-x-3 md:flex">
                 {isPending ? (
                   <div
-                    className="h-8 w-8 animate-pulse rounded-full bg-gradient-to-r from-purple-200 to-pink-200"
+                    className={`h-8 w-8 animate-pulse rounded-full motion-reduce:animate-none ${transparent ? 'bg-white/20' : 'bg-gray-200'}`}
                     role="status"
                     aria-label="Chargement du profil utilisateur"
                   />
@@ -90,11 +99,18 @@ function NavbarContent({ transparent }: { transparent?: boolean }) {
                   />
                 ) : (
                   <>
+                    {/* Sur la vidéo (transparent) : boutons de l'univers "Bal
+                        Masqué" (DESIGN.md) — liens blancs + une seule pilule
+                        blanche pour l'action principale. Ailleurs : inchangé. */}
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
-                      className="border-purple-200 bg-purple-50 text-purple-700 transition-all duration-200 hover:border-purple-600"
+                      className={
+                        transparent
+                          ? 'rounded-full border-transparent bg-transparent text-white/90 shadow-none hover:bg-white/10 hover:text-white'
+                          : 'border-purple-200 bg-purple-50 text-purple-700 transition-all duration-200 hover:border-purple-600'
+                      }
                     >
                       <Link href="/signin" aria-label="Se connecter">
                         <User className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -104,7 +120,11 @@ function NavbarContent({ transparent }: { transparent?: boolean }) {
                     <Button
                       size="sm"
                       asChild
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transition-all duration-200 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+                      className={
+                        transparent
+                          ? 'rounded-full bg-white px-5 text-black shadow-none hover:bg-white/90'
+                          : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transition-all duration-200 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl'
+                      }
                     >
                       <Link href="/signup" aria-label="Créer un compte">
                         Inscription
@@ -114,7 +134,11 @@ function NavbarContent({ transparent }: { transparent?: boolean }) {
                       size="sm"
                       variant="outline"
                       asChild
-                      className="group relative border-2 border-purple-600 bg-white text-purple-600 shadow-sm transition-all duration-200 hover:bg-purple-600 hover:text-white hover:shadow-md"
+                      className={
+                        transparent
+                          ? 'group rounded-full border-white/60 bg-transparent text-white shadow-none hover:bg-white/10 hover:text-white'
+                          : 'group relative border-2 border-purple-600 bg-white text-purple-600 shadow-sm transition-all duration-200 hover:bg-purple-600 hover:text-white hover:shadow-md'
+                      }
                     >
                       <Link
                         href="/pricing"
@@ -125,7 +149,7 @@ function NavbarContent({ transparent }: { transparent?: boolean }) {
                           className="h-4 w-4 transition-transform duration-200 group-hover:scale-110"
                           aria-hidden="true"
                         />
-                        Pricing
+                        Tarifs
                       </Link>
                     </Button>
                   </>
@@ -153,9 +177,17 @@ export function Navbar({ transparent }: { transparent?: boolean }) {
   return (
     <Suspense
       fallback={
+        // Le fallback doit avoir la MÊME forme que la vraie navbar :
+        // sinon, sur l'accueil, une barre pastel "sticky" s'affiche d'abord
+        // (elle pousse la vidéo vers le bas), puis saute en version
+        // transparente superposée → flash + décalage de la page.
         <header role="banner">
           <nav
-            className="sticky top-0 z-50 border-b border-gray-200/50 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 shadow-sm backdrop-blur-md"
+            className={
+              transparent
+                ? 'absolute top-0 left-0 z-50 w-full border-b border-white/10 bg-white/5 backdrop-blur-sm'
+                : 'sticky top-0 z-50 border-b border-gray-200/50 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 shadow-sm backdrop-blur-md'
+            }
             role="navigation"
             aria-label="Navigation principale"
           >
@@ -170,13 +202,19 @@ export function Navbar({ transparent }: { transparent?: boolean }) {
                       height={40}
                       priority
                     />
-                    <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent">
+                    <span
+                      className={
+                        transparent
+                          ? 'font-[family-name:var(--font-playfair)] text-2xl font-bold text-white'
+                          : 'bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text font-[family-name:var(--font-playfair)] text-2xl font-bold text-transparent'
+                      }
+                    >
                       Lastmodel
                     </span>
                   </div>
                 </div>
                 <div
-                  className="h-8 w-8 animate-pulse rounded-full bg-gradient-to-r from-purple-200 to-pink-200"
+                  className={`h-8 w-8 animate-pulse rounded-full motion-reduce:animate-none ${transparent ? 'bg-white/20' : 'bg-gray-200'}`}
                   role="status"
                   aria-label="Chargement..."
                 />

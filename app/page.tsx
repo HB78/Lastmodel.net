@@ -3,8 +3,13 @@ import { FilterDropdown } from '@/components/filterCards/filter-dropdown';
 import { Footer } from '@/components/footer/Footer';
 import { HeroSection } from '@/components/hero/HeroSection';
 import { Navbar } from '@/components/navbar/navbar';
-import { ProductGrid } from '@/components/productsInMainPage/product-grid';
+import {
+  ProductGrid,
+  ProductGridSkeleton,
+} from '@/components/productsInMainPage/product-grid';
 import { getCachedOrigins } from '@/lib/cache';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 interface HomeProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,8 +21,11 @@ export default async function Home({ searchParams }: HomeProps) {
   // Récupérer les origines depuis la base de données (avec cache 1h)
   const origins = await getCachedOrigins();
 
+  // 🎭 "Nuit encadrée" (DESIGN.md) : la nuit ouvre (hero) et ferme
+  // (bandeau + footer) la page ; entre les deux, fond ivoire neutre
+  // pour que les photos des profils ressortent.
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
+    <div className="min-h-screen bg-ivoire">
       {/* Navbar transparente superposée à la vidéo de la hero */}
       <div className="relative">
         <Navbar transparent />
@@ -36,46 +44,67 @@ export default async function Home({ searchParams }: HomeProps) {
         </section>
 
         {/* Section Profils */}
-        <section className="mb-8" aria-label="Profils recommandés">
+        <section className="mb-8" aria-label="Nouveaux profils">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
+              {/* Avant : "Profils recommandés" + un bloc "Triés par : Nouveaux
+                  profils". Rien n'est recommandé (pas d'algorithme) : ce sont
+                  simplement les plus récents → le titre dit maintenant ce que
+                  la grille montre vraiment, et le bloc de tri faisait doublon. */}
               <h2 className="text-2xl font-bold text-gray-900">
-                Profils recommandés
+                Nouveaux profils
               </h2>
               <p className="text-gray-700">
-                Découvrez des personnes qui pourraient vous intéresser
+                Les derniers profils publiés, du plus récent au plus ancien.
               </p>
-            </div>
-
-            {/* Bouton de tri */}
-            <div
-              className="flex items-center gap-2 text-sm text-gray-700"
-              role="status"
-              aria-label="Ordre de tri actuel"
-            >
-              <span>Triés par :</span>
-              <span className="font-medium text-purple-600">
-                Nouveaux profils
-              </span>
             </div>
           </div>
 
           {/* ✅ ProductGrid récupère les params depuis l'URL directement */}
-          <ProductGrid filters={params} />
+          {/* ⏳ Suspense : la page (hero, filtres) s'affiche tout de suite,
+              la grille arrive dès que la base a répondu (squelette en attendant).
+              key = les filtres : à chaque changement de filtre, le squelette
+              réapparaît au lieu de laisser les anciens résultats affichés. */}
+          <Suspense
+            key={JSON.stringify(params)}
+            fallback={<ProductGridSkeleton />}
+          >
+            <ProductGrid filters={params} />
+          </Suspense>
         </section>
 
-        {/* Section CTA en bas */}
+        {/* Section CTA en bas : s'adresse aux ANNONCEURS
+            (le visiteur vient de voir les profils juste au-dessus).
+            Argument vrai : seuls les profils Premium/VIP apparaissent sur
+            l'accueil (voir product-grid.tsx, subscriptionType: not 'FREE')
+            et ils ont droit à 11 photos (lib/photoLimits.ts).
+            ⚠️ Si ces règles changent, mettre ce texte à jour. */}
         <section
-          className="mt-16 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center text-white"
-          aria-label="Appel à l'action"
+          className="mt-16 rounded-2xl bg-nuit p-8 text-center text-white sm:p-12"
+          aria-labelledby="cta-annonceurs"
         >
-          <h2 className="mb-2 text-2xl font-bold">
-            Prêt à faire de belles rencontres ?
+          <h2 id="cta-annonceurs" className="mb-2 text-2xl font-bold">
+            Créez votre profil sur Lastmodel
           </h2>
-          <p className="mb-6 text-purple-100">
-            Rejoignez notre communauté et commencez votre histoire dès
-            aujourd'hui
+          <p className="mx-auto mb-6 max-w-xl text-white/80">
+            L&apos;inscription est gratuite. Passez Premium ou VIP pour
+            apparaître sur la page d&apos;accueil et publier jusqu&apos;à 11
+            photos.
           </p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/signup"
+              className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-black transition-opacity duration-200 hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              Créer mon profil
+            </Link>
+            <Link
+              href="/pricing"
+              className="rounded-full border border-white/60 px-8 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              Voir les tarifs
+            </Link>
+          </div>
         </section>
       </main>
       <Footer />

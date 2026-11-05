@@ -151,7 +151,7 @@ export default function CityInput({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="bg-white pr-10 pl-10 text-gray-900 focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
+          className="bg-white pr-10 pl-10 text-gray-900 focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 pointer-coarse:h-11"
           onFocus={() => query && setIsOpen(true)}
           autoComplete="off"
           role="combobox"
@@ -195,7 +195,7 @@ export default function CityInput({
                 role="option"
                 aria-selected="false"
                 onClick={() => handleCitySelect(city)}
-                className="w-full border-b border-gray-100 px-3 py-2 text-left text-gray-900 last:border-b-0 hover:bg-purple-50 focus:bg-purple-50 focus:ring-2 focus:ring-purple-500 focus:outline-none focus:ring-inset"
+                className="w-full border-b border-gray-100 px-3 py-2 text-left text-gray-900 last:border-b-0 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-purple-500 focus:outline-none focus:ring-inset"
                 type="button"
               >
                 <div className="flex items-center justify-between">

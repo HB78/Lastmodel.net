@@ -5,7 +5,7 @@
  * - S'affiche uniquement sur mobile (< 768px) avec un bouton hamburger
  * - Slide-in depuis la gauche avec animation
  * - Affiche les infos utilisateur (avatar, nom, email) si connecté
- * - Liste tous les liens de navigation (Accueil, Favoris, Profil, Pricing, Contact)
+ * - Liste tous les liens de navigation (Accueil, Favoris, Profil, Tarifs, Contact)
  * - Bouton de déconnexion en bas pour les utilisateurs connectés
  * - Se ferme automatiquement lors du clic sur un lien
  */
@@ -54,7 +54,7 @@ export function MobileDrawer({
   // Sur navbar transparente (par-dessus la vidéo sombre), le hamburger doit être
   // blanc pour rester visible. Sinon on garde le gris habituel des autres pages.
   const barColor = transparent ? 'bg-white' : 'bg-gray-700';
-  const triggerHover = transparent ? 'hover:bg-white/10' : 'hover:bg-purple-50';
+  const triggerHover = transparent ? 'hover:bg-white/10' : 'hover:bg-gray-100';
   return (
     <div className="md:hidden">
       <Drawer direction="left" open={isOpen} onOpenChange={setIsOpen}>
@@ -88,7 +88,7 @@ export function MobileDrawer({
           </Button>
         </DrawerTrigger>
         <DrawerContent className="h-full w-[85%] max-w-[350px]">
-          <DrawerHeader className="border-b border-gray-200/50 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
+          <DrawerHeader className="border-b border-gray-200 bg-white">
             <DrawerTitle>
               <div className="flex items-center gap-2">
                 <Image
@@ -98,7 +98,7 @@ export function MobileDrawer({
                   height={32}
                   priority
                 />
-                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-xl font-bold text-transparent">
+                <span className="font-[family-name:var(--font-playfair)] text-xl font-bold text-gray-900">
                   Lastmodel
                 </span>
               </div>
@@ -108,17 +108,17 @@ export function MobileDrawer({
             </DrawerDescription>
           </DrawerHeader>
 
-          <div className="flex flex-col h-full overflow-y-auto bg-gradient-to-br from-purple-50/50 via-pink-50/50 to-indigo-50/50">
+          <div className="flex flex-col h-full overflow-y-auto bg-ivoire">
             {/* User Info Section */}
             {session?.user && (
-              <div className="mx-4 mt-4 mb-4 rounded-lg bg-white/70 p-4 backdrop-blur-sm shadow-sm">
+              <div className="mx-4 mt-4 mb-4 rounded-lg border border-gray-200 bg-white p-4">
                 <div className="flex items-center space-x-3">
-                  <Avatar className="h-12 w-12 ring-2 ring-purple-200">
+                  <Avatar className="h-12 w-12 ring-2 ring-gray-200">
                     <AvatarImage
                       src=""
                       alt={`Photo de profil de ${session.user.name}`}
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 font-semibold text-white">
+                    <AvatarFallback className="bg-nuit font-semibold text-white">
                       {userInitials}
                     </AvatarFallback>
                   </Avatar>
@@ -141,12 +141,12 @@ export function MobileDrawer({
                   <Link
                     href="/"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Aller à l'accueil"
                   >
                     <Home
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
                     Accueil
@@ -154,12 +154,12 @@ export function MobileDrawer({
                   <Link
                     href="/favorites"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Voir mes favoris"
                   >
                     <Heart
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
                     Favoris
@@ -167,12 +167,12 @@ export function MobileDrawer({
                   <Link
                     href="/profile"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Voir mon profil"
                   >
                     <User
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
                     Mon Profil
@@ -181,26 +181,26 @@ export function MobileDrawer({
                     <Link
                       href="/pricing"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                      className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                       role="menuitem"
                       aria-label="Voir les tarifs"
                     >
                       <HandCoins
-                        className="h-5 w-5 text-purple-600"
+                        className="h-5 w-5 text-gray-500"
                         aria-hidden="true"
                       />
-                      Pricing
+                      Tarifs
                     </Link>
                   )}
                   <Link
                     href="/contact"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Nous contacter"
                   >
                     <Mail
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
                     Contact
@@ -211,12 +211,12 @@ export function MobileDrawer({
                   <Link
                     href="/signin"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Se connecter"
                   >
                     <User
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
                     Connexion
@@ -224,7 +224,7 @@ export function MobileDrawer({
                   <Link
                     href="/signup"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 text-base font-medium text-white shadow-md transition-all hover:from-purple-700 hover:to-pink-700 hover:shadow-lg"
+                    className="flex items-center gap-3 rounded-full bg-nuit px-4 py-3 text-base font-medium text-white transition-colors hover:bg-nuit-profonde"
                     role="menuitem"
                     aria-label="Créer un compte"
                   >
@@ -233,25 +233,25 @@ export function MobileDrawer({
                   <Link
                     href="/pricing"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Voir les tarifs"
                   >
                     <HandCoins
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
-                    Pricing
+                    Tarifs
                   </Link>
                   <Link
                     href="/contact"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-lg bg-white/70 px-4 py-3 text-base font-medium text-gray-700 transition-all hover:bg-white hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
                     role="menuitem"
                     aria-label="Nous contacter"
                   >
                     <Mail
-                      className="h-5 w-5 text-purple-600"
+                      className="h-5 w-5 text-gray-500"
                       aria-hidden="true"
                     />
                     Contact

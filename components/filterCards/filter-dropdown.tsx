@@ -105,7 +105,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
 
   return (
     <section
-      className="rounded-2xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-sm"
+      className="rounded-2xl border border-gray-200 bg-white p-6"
       role="search"
       aria-labelledby={`${filterId}-title`}
       aria-describedby={`${filterId}-description`}
@@ -115,10 +115,10 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div
-              className="rounded-lg bg-gradient-to-r from-purple-100 to-pink-100 p-2"
+              className="rounded-lg bg-gray-100 p-2"
               aria-hidden="true"
             >
-              <Search className="h-5 w-5 text-purple-600" />
+              <Search className="h-5 w-5 text-gray-700" />
             </div>
             <div>
               <h2
@@ -163,7 +163,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               className="flex items-center gap-2 text-sm font-medium text-gray-700"
             >
               <Calendar
-                className="h-4 w-4 text-purple-600"
+                className="h-4 w-4 text-gray-500"
                 aria-hidden="true"
               />
               Âge
@@ -174,7 +174,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
             >
               <SelectTrigger
                 id={ageId}
-                className="w-full border-gray-300 bg-white text-gray-900 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:ring-offset-1"
+                className="w-full border-gray-300 bg-white text-gray-900 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:ring-offset-1 pointer-coarse:h-11!"
                 aria-describedby={currentAge ? `${ageId}-current` : undefined}
               >
                 <SelectValue placeholder="Sélectionnez un âge" />
@@ -186,43 +186,43 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               >
                 <SelectItem
                   value="all"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   Tous les âges
                 </SelectItem>
                 <SelectItem
                   value="18-23"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   18-23 ans
                 </SelectItem>
                 <SelectItem
                   value="24-27"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   24-27 ans
                 </SelectItem>
                 <SelectItem
                   value="28-32"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   28-32 ans
                 </SelectItem>
                 <SelectItem
                   value="33-37"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   33-37 ans
                 </SelectItem>
                 <SelectItem
                   value="38-42"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   38-42 ans
                 </SelectItem>
                 <SelectItem
                   value="43-47"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   43-47 ans
                 </SelectItem>
@@ -245,7 +245,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               htmlFor={originId}
               className="flex items-center gap-2 text-sm font-medium text-gray-700"
             >
-              <Users className="h-4 w-4 text-purple-600" aria-hidden="true" />
+              <Users className="h-4 w-4 text-gray-500" aria-hidden="true" />
               Origine
             </label>
             <Select
@@ -254,7 +254,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
             >
               <SelectTrigger
                 id={originId}
-                className="w-full border-gray-300 bg-white text-gray-900 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:ring-offset-1"
+                className="w-full border-gray-300 bg-white text-gray-900 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:ring-offset-1 pointer-coarse:h-11!"
                 aria-describedby={
                   currentOrigin ? `${originId}-current` : undefined
                 }
@@ -268,7 +268,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               >
                 <SelectItem
                   value="all"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   Toutes les origines
                 </SelectItem>
@@ -276,7 +276,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
                   <SelectItem
                     key={origin.id}
                     value={origin.id}
-                    className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                    className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                   >
                     {origin.name}
                   </SelectItem>
@@ -301,7 +301,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               htmlFor={sexId}
               className="flex items-center gap-2 text-sm font-medium text-gray-700"
             >
-              <Filter className="h-4 w-4 text-purple-600" aria-hidden="true" />
+              <Filter className="h-4 w-4 text-gray-500" aria-hidden="true" />
               Genre
             </label>
             <Select
@@ -310,7 +310,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
             >
               <SelectTrigger
                 id={sexId}
-                className="w-full border-gray-300 bg-white text-gray-900 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:ring-offset-1"
+                className="w-full border-gray-300 bg-white text-gray-900 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:ring-offset-1 pointer-coarse:h-11!"
                 aria-describedby={currentSex ? `${sexId}-current` : undefined}
               >
                 <SelectValue placeholder="Sélectionnez un genre" />
@@ -322,27 +322,21 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               >
                 <SelectItem
                   value="all"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
                   Tous les genres
                 </SelectItem>
                 <SelectItem
                   value="homme"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
-                  <div className="flex items-center gap-2">
-                    <span aria-hidden="true">👨</span>
-                    <span>Homme</span>
-                  </div>
+                  Homme
                 </SelectItem>
                 <SelectItem
                   value="femme"
-                  className="text-gray-900 hover:bg-purple-50 focus:bg-purple-50 focus:text-purple-900"
+                  className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900"
                 >
-                  <div className="flex items-center gap-2">
-                    <span aria-hidden="true">👩</span>
-                    <span>Femme</span>
-                  </div>
+                  Femme
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -363,7 +357,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
               htmlFor={cityId}
               className="flex items-center gap-2 text-sm font-medium text-gray-700"
             >
-              <MapPin className="h-4 w-4 text-purple-600" aria-hidden="true" />
+              <MapPin className="h-4 w-4 text-gray-500" aria-hidden="true" />
               Ville
             </label>
             <div className="relative">
@@ -412,7 +406,7 @@ export function FilterDropdown({ origins }: FilterDropdownProps) {
                 variant="outline"
                 size="sm"
                 onClick={clearAllFilters}
-                className="border-gray-300 bg-white text-gray-600 hover:bg-slate-100 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                className="border-gray-300 bg-white text-gray-600 hover:bg-slate-100 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 pointer-coarse:h-11"
                 aria-label={`Réinitialiser tous les filtres. ${activeFiltersCount} filtres actuellement actifs: ${getFilterDescription()}`}
               >
                 <X className="mr-2 h-4 w-4" aria-hidden="true" />
