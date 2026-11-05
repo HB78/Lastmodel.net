@@ -1,7 +1,9 @@
 'use server';
 
+import { getMaxPhotos } from '@/lib/photoLimits';
 import { prisma } from '@/lib/prisma-setup/db';
 import { getSession } from '@/tools';
+import { isOwnPhotoUrl } from '@/tools/protectS3Storage';
 import {
   CreateUserProfilFormData,
   CreateUserProfilSchema,
@@ -43,6 +45,7 @@ export async function createUserProfilAction(formData: FormData) {
       select: {
         id: true,
         emailVerified: true,
+        subscriptionType: true,
         name: true,
         sex: true,
         age: true,
@@ -82,6 +85,36 @@ export async function createUserProfilAction(formData: FormData) {
 
     const validatedData: CreateUserProfilFormData = validationResult.data;
 
+    // 🔒 VÉRIFICATION DES PHOTOS
+    // validatedData.images = liste d'URLs envoyée par le navigateur
+    // (CreateProductForm → image_0, image_1…). Zod vérifie seulement que ce
+    // sont des textes → on vérifie nous-mêmes le NOMBRE et le CONTENU.
+    // ⚠️ AVANT le deleteMany plus bas : si c'est refusé, on ne touche à rien.
+
+    // ① Nombre : pas plus que ce que l'abonnement autorise
+    // On compare images.length directement (et pas existantes + nouvelles)
+    // car plus bas, les anciennes photos sont SUPPRIMÉES puis remplacées
+    // par cette liste → c'est elle qui deviendra le total.
+    const maxPhotos = getMaxPhotos(findUser.subscriptionType);
+    if (validatedData.images.length > maxPhotos) {
+      return {
+        error: `Vous ne pouvez pas avoir plus de ${maxPhotos} photos`,
+        field: 'images',
+        status: 400,
+      };
+    }
+
+    // ② Contenu : chaque URL doit être une photo uploadée par CET user
+    // (voir isOwnPhotoUrl) → bloque la photo d'un autre user ou d'un autre site
+    // .every() = true seulement si TOUTES les URLs passent le test
+    if (!validatedData.images.every((url) => isOwnPhotoUrl(url, userId))) {
+      return {
+        error: "Une des photos n'a pas été uploadée depuis votre compte",
+        field: 'images',
+        status: 400,
+      };
+    }
+
     // Trouver l'origine sélectionnée
     let originId: string | null = null;
     if (validatedData.origin) {
@@ -91,18 +124,20 @@ export async function createUserProfilAction(formData: FormData) {
       originId = origin?.id || null;
     }
 
-    // Vérifier s'il y a déjà des photos
-    const existingPhotos = await prisma.photo.findMany({
+    // Supprimer les anciennes photos de l'user (s'il y en a)
+    // Normalement il n'y en a pas à ce stade, sauf si :
+    // - un envoi précédent a échoué à mi-chemin (photos écrites, mais
+    //   user.update plus bas a planté, ex: téléphone déjà utilisé)
+    //   → sans ça, les photos seraient en DOUBLE au 2ᵉ envoi
+    // - l'action est appelée directement (elle ne vérifie pas que le profil
+    //   est incomplet) → on REMPLACE les photos au lieu d'en empiler
+    // Pas besoin de vérifier avant s'il y en a : deleteMany sur 0 ligne
+    // ne fait rien et ne plante pas.
+    // ⚠️ Seules les lignes en BASE sont supprimées, les fichiers restent
+    // sur R2 (point 8 de l'audit).
+    await prisma.photo.deleteMany({
       where: { userId },
-      select: { id: true },
     });
-
-    // Supprimer les anciennes photos seulement s'il y en a
-    if (existingPhotos.length > 0) {
-      await prisma.photo.deleteMany({
-        where: { userId },
-      });
-    }
 
     // Créer les nouvelles photos
     for (let i = 0; i < validatedData.images.length; i++) {

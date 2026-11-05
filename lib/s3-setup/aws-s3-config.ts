@@ -1,4 +1,17 @@
-'use server';
+// 🔒 server-only : ce fichier est un utilitaire INTERNE au serveur.
+//
+// ⚠️ Ne PAS remettre 'use server' ici !
+// 'use server' en haut d'un fichier transforme chaque fonction exportée en
+// server action = un endpoint HTTP appelable depuis le navigateur avec
+// n'importe quels arguments. Or deleteFileFromS3 supprime ce qu'on lui donne
+// SANS AUCUNE vérification → elle deviendrait une porte ouverte qui
+// contourne les contrôles de deleteImagesAction / deletePhotoAction.
+//
+// 'server-only' fait l'inverse : si un composant 'use client' importe ce
+// fichier, le build plante avec une erreur claire. La fonction reste donc
+// utilisable uniquement par du code serveur (route.ts, server actions…),
+// qui doit faire ses propres vérifications AVANT de l'appeler.
+import 'server-only';
 
 import {
   sanitizeFileName,
@@ -55,12 +68,24 @@ export async function uploadFileToS3(
   }
 
   // 🔒 NOM ULTRA-SÉCURISÉ
+  // timestamp + randomSuffix : rendent le nom unique (2 users peuvent
+  // envoyer chacun un "selfie.jpg" sans s'écraser)
   const timestamp = Date.now();
   const randomSuffix = Math.random().toString(36).substring(2, 8);
+  // L'extension vient TOUJOURS du vrai fichier (selfie.jpg → "jpg")
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  // Nom de base : fileName s'il y en a un, sinon le nom d'origine sans extension
+  // ⚠️ fileName est toujours undefined sur le site (option inutilisée, voir
+  // s3-upload/route.ts) → on tombe toujours sur le nom d'origine : "selfie"
   const baseFileName = fileName ?? file.name.replace(/\.[^/.]+$/, '');
+  // Retire les caractères dangereux (espaces, "/", "..") du nom
   const safeBaseFileName = sanitizeFileName(baseFileName);
   const safeFileName = `${timestamp}-${randomSuffix}-${safeBaseFileName}.${fileExtension}`;
+  // 🔑 Clé finale du fichier dans le bucket (son "chemin")
+  // prefix est imposé par /api/s3-upload = images/{userId}
+  // → ex: images/clx123alice/1730000000-ab12cd-photo.jpg
+  // C'est ce "images/{userId}/" qui permet à deleteImagesAction
+  // de vérifier à qui appartient le fichier.
   const uniqueFileName = `${prefix}/${safeFileName}`;
 
   const command = new PutObjectCommand({

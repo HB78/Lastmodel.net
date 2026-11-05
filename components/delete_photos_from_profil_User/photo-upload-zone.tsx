@@ -3,6 +3,8 @@
 import { addPhotoAction } from '@/actions/creation/addPhoto';
 import { DropZone } from '@/components/dropzone/Dropzone';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useSession } from '@/lib/better-auth-setup/authClient';
+import { getMaxPhotos } from '@/lib/photoLimits';
 import { Camera, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
@@ -34,7 +36,10 @@ export function PhotoUploadZone() {
     });
   };
 
-  const maxPhotos = 11;
+  // Limite selon l'abonnement → source unique : lib/photoLimits.ts
+  // (avant : 11 en dur → un compte FREE voyait "11 photos max")
+  const { data: session } = useSession();
+  const maxPhotos = getMaxPhotos(session?.user?.subscriptionType);
   const canUploadMore = optimisticPhotos.length < maxPhotos;
 
   if (!canUploadMore) {

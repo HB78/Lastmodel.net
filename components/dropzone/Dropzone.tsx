@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from '@/lib/better-auth-setup/authClient';
+import { getMaxPhotos } from '@/lib/photoLimits';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 import { AddMorePhotosZone } from './components/AddMorePhotosZone';
@@ -38,8 +39,9 @@ export function DropZone({
   // Hook personnalisé gérant toute la logique d'upload et de suppression
   const { data: session } = useSession();
 
-  // Calculer la limite selon le type d'abonnement
-  const maxPhotos = session?.user?.subscriptionType === 'FREE' ? 1 : 11;
+  // Limite selon l'abonnement → source unique : lib/photoLimits.ts
+  // (côté navigateur = confort d'affichage, la vraie protection est côté serveur)
+  const maxPhotos = getMaxPhotos(session?.user?.subscriptionType);
 
   const { files, isPending, onDrop, handleDelete } = usePhotoUpload(
     getInfo,

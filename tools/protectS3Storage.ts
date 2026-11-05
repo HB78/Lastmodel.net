@@ -75,3 +75,61 @@ export function checkUploadRate(userId: string): boolean {
   // ÉTAPE 5 : Autoriser cet upload
   return true;
 }
+
+// 🔒 L'URL pointe-t-elle vers une photo de CET utilisateur ?
+//
+// 🎯 À QUOI ÇA SERT (en une phrase) :
+// Empêcher qu'un user enregistre en base une URL qui n'est PAS une photo
+// qu'il a lui-même uploadée sur NOTRE R2 : la photo d'un autre user,
+// une image d'un autre site, ou n'importe quel texte.
+//
+// ❓ POURQUOI C'EST NÉCESSAIRE ?
+// Ajouter une photo = 2 requêtes séparées vers le serveur :
+//   ① /api/s3-upload  → met le FICHIER sur R2 et renvoie son URL au navigateur
+//   ② addPhotoAction / createUserProfilAction → reçoivent cette URL
+//      DEPUIS LE NAVIGATEUR et l'écrivent en base (= ce qui s'affiche)
+// Entre ① et ②, l'URL passe par le navigateur, donc elle a pu être modifiée.
+// Un tricheur peut même sauter ① et appeler ② directement (F12 → Réseau)
+// avec l'URL qu'il veut, par exemple :
+//   - https://pub-xxx.r2.dev/images/{idDeBob}/bob.jpg → la photo de Bob
+//     s'afficherait sur SON profil (usurpation d'identité)
+//   - https://autre-site.com/image.jpg → image externe qu'on ne contrôle pas
+//     (peut être choquante, ou changer après coup)
+//
+// ⚠️ Ce n'est PAS du "sanitize" : sanitize = NETTOYER une valeur pour la
+// rendre sûre (comme sanitizeFileName au-dessus, qui remplace les caractères
+// dangereux). Ici on VALIDE : on ne modifie rien, on dit juste oui ou non,
+// et si c'est non, l'action REFUSE d'écrire en base.
+// Résultat : la base ne contient que des URLs de photos uploadées par leur
+// propriétaire.
+//
+// 🔍 COMMENT ÇA MARCHE ?
+// Depuis le correctif de /api/s3-upload, chaque photo est rangée dans
+// images/{userId}/... → l'URL d'une photo à toi commence forcément par
+//   https://pub-xxx.r2.dev/images/{tonId}/
+// - Le "/" final : sans lui, "clx1" passerait pour les photos de "clx123…"
+// - Pas de ".." : une URL légitime n'en contient jamais (sanitizeFileName)
+// - Pas de R2_URL configurée → on refuse tout (sinon on comparerait avec
+//   "undefined/images/...")
+// - url: unknown (et pas string) : l'URL vient du navigateur, TypeScript ne
+//   vérifie rien à l'exécution → on teste nous-mêmes que c'est bien un texte
+//
+// 📌 LIMITES À CONNAÎTRE
+// - Vérifie que l'URL est dans TON dossier, pas que le fichier EXISTE :
+//   une URL inventée dans son propre dossier passe → au pire une image
+//   cassée sur son propre profil (pas dangereux, la limite de photos
+//   s'applique quand même).
+// - Les anciennes photos (rangées dans images/ sans userId, avant le
+//   correctif) ne passent PAS ce test. Pas de souci : on ne l'appelle que
+//   sur des photos fraîchement uploadées, jamais sur celles déjà en base.
+//
+// 📍 Utilisée par : addPhotoAction, createUserProfilAction
+// (toujours AVANT prisma.photo.create)
+export function isOwnPhotoUrl(url: unknown, userId: string): boolean {
+  const r2Url = process.env.R2_URL;
+  if (!r2Url || typeof url !== 'string' || url.includes('..')) {
+    return false;
+  }
+
+  return url.startsWith(`${r2Url}/images/${userId}/`);
+}
