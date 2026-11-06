@@ -14,7 +14,6 @@ import {
 import { getSession } from '@/tools';
 import { ArrowLeft, Phone } from 'lucide-react';
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -67,11 +66,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  // Trouver l'image principale ou la première image
-  const mainPhoto =
-    product.photos.find((photo) => photo.isMain) || product.photos[0];
-  const imageUrl = mainPhoto?.url || '/placeholder-avatar.jpg';
-
   // Formater l'âge
   const ageText = product.age ? `${product.age} ans` : 'Âge non renseigné';
 
@@ -93,10 +87,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <Button
               variant="ghost"
               className="mb-6 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-              aria-label="Retourner à la liste des produits"
             >
               <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
-              Retour aux produits
+              Retour aux profils
             </Button>
           </Link>
         </nav>
@@ -107,32 +100,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <h2 id="images-title" className="sr-only">
               Photos de {product.name}
             </h2>
-            <div className="space-y-4">
-              <Card>
-                <CardContent className="p-0">
-                  <div className="relative overflow-hidden rounded-lg">
-                    <Image
-                      src={imageUrl}
-                      alt={`Photo principale de ${product.name}`}
-                      width={600}
-                      height={600}
-                      priority
-                      className="h-96 w-full cursor-pointer object-cover transition-opacity hover:opacity-95 lg:h-[500px] xl:h-full"
-                      role="img"
-                    />
-                    {session?.user.id ? (
-                      <div className="absolute top-4 right-4">
-                        <LikeButton profileId={id} />
-                      </div>
-                    ) : null}
-                  </div>
-                </CardContent>
-              </Card>
-              <PhotoGallery
-                photos={product.photos}
-                productName={product.name}
-              />
-            </div>
+            {/* Grande photo + miniatures + plein écran : tout est dans PhotoGallery
+                (la grande photo s'ouvre en plein écran au clic) */}
+            <PhotoGallery
+              photos={product.photos}
+              productName={product.name}
+              mainPhotoOverlay={
+                session?.user.id ? <LikeButton profileId={id} /> : undefined
+              }
+            />
           </section>
 
           {/* Section Informations */}
@@ -184,15 +160,27 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
 
                 {/* Contact */}
+                {/* 📞 Bouton d'appel : un lien tel: ouvre directement le
+                    téléphone sur mobile (et l'appli d'appel sur ordinateur).
+                    Le numéro reste écrit sur le bouton : on peut le lire
+                    ou le recopier si l'appel direct n'est pas possible.
+                    tel: n'accepte pas les espaces → on ne garde que les
+                    chiffres et le "+" ("06 12 34 56 78" → "0612345678"). */}
                 <div className="mb-4">
-                  <span
-                    className="text-md inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 font-medium text-orange-800"
-                    role="text"
-                    aria-label={`Téléphone: ${product.phone || 'Non renseigné'}`}
-                  >
-                    <Phone className="h-3 w-3" aria-hidden="true" />
-                    {product.phone || 'Non renseigné'}
-                  </span>
+                  {product.phone ? (
+                    <a
+                      href={`tel:${product.phone.replace(/[^\d+]/g, '')}`}
+                      className="inline-flex h-12 items-center gap-2 rounded-full bg-nuit px-6 font-semibold text-white transition-colors duration-200 hover:bg-nuit-profonde focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nuit"
+                      aria-label={`Appeler ${product.name} au ${product.phone}`}
+                    >
+                      <Phone className="h-4 w-4" aria-hidden="true" />
+                      <span className="tabular-nums">{product.phone}</span>
+                    </a>
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      Téléphone non renseigné
+                    </p>
+                  )}
                 </div>
               </header>
 
