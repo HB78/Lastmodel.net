@@ -138,13 +138,13 @@ const CreateProductForm = ({ origins }: CreateProductFormProps) => {
                   htmlFor="name"
                   className="flex items-center gap-2 text-sm font-semibold text-slate-700"
                 >
-                  Nom complet
+                  Pseudo
                   <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="name"
                   {...register('name')}
-                  placeholder="ex: Jean Dupont"
+                  placeholder="ex : Luna"
                   disabled={isPending}
                   className={`h-12 text-base transition-all duration-200 ${
                     errors.name

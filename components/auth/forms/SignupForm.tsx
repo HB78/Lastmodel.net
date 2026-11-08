@@ -2,6 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import PasswordInput from '@/components/ui/password-input';
 import { signUp } from '@/lib/better-auth-setup/authClient';
 import { RegisterFormData, RegisterSchema } from '@/zodSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -74,25 +76,31 @@ const SignupForm = () => {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <div>
+          <div className="space-y-2">
+            <Label htmlFor="signup-name">Pseudo</Label>
             <Input
+              id="signup-name"
               {...register('name')}
-              placeholder="Nom complet"
+              autoComplete="nickname"
+              placeholder="ex : Luna"
               disabled={isPending}
-              className="h-10"
+              className="h-11"
             />
             {errors.name && (
               <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
             )}
           </div>
 
-          <div>
+          <div className="space-y-2">
+            <Label htmlFor="signup-email">Email</Label>
             <Input
+              id="signup-email"
               {...register('email')}
               type="email"
-              placeholder="Email"
+              autoComplete="email"
+              placeholder="vous@exemple.com"
               disabled={isPending}
-              className="h-10"
+              className="h-11"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-500">
@@ -101,13 +109,16 @@ const SignupForm = () => {
             )}
           </div>
 
-          <div>
-            <Input
+          <div className="space-y-2">
+            <Label htmlFor="signup-password">Mot de passe</Label>
+            {/* PasswordInput : le même champ, avec le bouton 👁️ pour afficher le mot de passe */}
+            <PasswordInput
+              id="signup-password"
               {...register('password')}
-              type="password"
-              placeholder="Mot de passe (min. 6 caractères)"
+              autoComplete="new-password"
+              placeholder="6 caractères minimum"
               disabled={isPending}
-              className="h-10"
+              className="h-11 pr-11"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-500">
@@ -116,13 +127,16 @@ const SignupForm = () => {
             )}
           </div>
 
-          <div>
-            <Input
+          <div className="space-y-2">
+            <Label htmlFor="signup-confirm-password">
+              Confirmer le mot de passe
+            </Label>
+            <PasswordInput
+              id="signup-confirm-password"
               {...register('confirmPassword')}
-              type="password"
-              placeholder="Confirmer le mot de passe"
+              autoComplete="new-password"
               disabled={isPending}
-              className="h-10"
+              className="h-11 pr-11"
             />
             {errors.confirmPassword && (
               <p className="mt-1 text-sm text-red-500">
@@ -132,7 +146,12 @@ const SignupForm = () => {
           </div>
         </div>
 
-        <Button type="submit" className="h-10 w-full" disabled={isPending}>
+        {/* Pilule noire : l'action principale */}
+        <Button
+          type="submit"
+          className="h-11 w-full rounded-full bg-black font-semibold text-white hover:bg-black/80"
+          disabled={isPending}
+        >
           {isPending ? 'Inscription...' : "S'inscrire"}
         </Button>
       </form>

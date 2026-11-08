@@ -24,11 +24,12 @@ const Social = () => {
       <Button
         size="lg"
         variant="outline"
-        className="w-full cursor-pointer"
+        className="h-11 w-full cursor-pointer rounded-full border-gray-300 font-semibold"
         onClick={handleGoogleSignIn}
         disabled={isPending}
       >
-        <FcGoogle className="h-5 w-5" />
+        <FcGoogle className="h-5 w-5" aria-hidden="true" />
+        Continuer avec Google
       </Button>
     </div>
   );

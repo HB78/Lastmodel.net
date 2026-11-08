@@ -18,7 +18,7 @@ export const UserInfoCard = ({ email, username }: userInfos) => {
               <User className="h-4 w-4 text-blue-600" />
             </div>
             <span className="text-sm font-medium text-slate-600">
-              Nom d'utilisateur
+              Pseudo
             </span>
           </div>
           <span className="text-sm font-semibold text-slate-800">

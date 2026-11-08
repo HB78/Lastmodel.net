@@ -118,14 +118,14 @@ const EditUserForm = ({ session, origins }: EditUserFormProps) => {
             htmlFor="name"
             className="text-sm font-semibold text-slate-700"
           >
-            Nom complet
+            Pseudo
             <span className="ml-1 text-red-500">*</span>
           </Label>
           <Input
             id="name"
             {...register('name')}
             type="text"
-            placeholder="Votre nom complet"
+            placeholder="Votre pseudo"
             disabled={isPending}
             className={`h-12 text-base ${
               errors.name

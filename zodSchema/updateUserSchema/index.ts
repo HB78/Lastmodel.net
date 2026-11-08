@@ -25,8 +25,8 @@ export const ChangePasswordSchema = z
 export const CreateUserProfilSchema = z.object({
   name: z
     .string()
-    .min(3, 'Le nom doit contenir au moins 3 caractères')
-    .max(100, 'Le nom ne peut pas dépasser 100 caractères'),
+    .min(3, 'Le pseudo doit contenir au moins 3 caractères')
+    .max(100, 'Le pseudo ne peut pas dépasser 100 caractères'),
   sex: z.enum(['homme', 'femme']),
   age: z
     .number()
@@ -66,8 +66,8 @@ export const CreateUserProfilSchema = z.object({
 export const UpdateUserProfilSchema = z.object({
   name: z
     .string()
-    .min(3, 'Le nom doit contenir au moins 3 caractères')
-    .max(100, 'Le nom ne peut pas dépasser 100 caractères'),
+    .min(3, 'Le pseudo doit contenir au moins 3 caractères')
+    .max(100, 'Le pseudo ne peut pas dépasser 100 caractères'),
   sex: z.enum(['homme', 'femme']),
   age: z
     .number()

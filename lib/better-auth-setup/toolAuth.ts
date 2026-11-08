@@ -24,12 +24,24 @@ export const isAdmin = async () => {
   return user?.role === Role.ADMIN;
 };
 
+// Nettoie le pseudo saisi à l'inscription
+// \p{L} = n'importe quelle lettre, accents compris (é, è, ç, ï…)
+// \p{N} = n'importe quel chiffre
+// Le "u" à la fin des regex active ces raccourcis Unicode.
+// (avant : [a-zA-Z] → "Hélène" devenait "Hlne", "Luna92" devenait "Luna")
 export function normalizeName(name: string) {
-  return name
-    .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/[^a-zA-Z\s'-]/g, '')
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  return (
+    name
+      .trim()
+      .replace(/\s+/g, ' ')
+      // garde lettres (avec accents), chiffres, espaces, ' - _
+      .replace(/[^\p{L}\p{N}\s'_-]/gu, '')
+      // majuscule au début de chaque mot (aussi après - et ') :
+      // "jean-paul" → "Jean-Paul", "élodie" → "Élodie"
+      .replace(/(^|[\s'-])(\p{L})/gu, (_match, before, letter) => {
+        return before + letter.toUpperCase();
+      })
+  );
 }
 
 // export const VALID_DOMAINS = () => {

@@ -2,6 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import PasswordInput from '@/components/ui/password-input';
 import { signIn } from '@/lib/better-auth-setup/authClient';
 import { LoginFormData, LoginSchema } from '@/zodSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -108,10 +110,13 @@ const SigninForm = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
+                <Label htmlFor="signin-email">Email</Label>
                 <Input
+                  id="signin-email"
                   {...register('email')}
                   type="email"
-                  placeholder="Email"
+                  autoComplete="email"
+                  placeholder="vous@exemple.com"
                   disabled={isPending}
                   className="h-11"
                 />
@@ -123,12 +128,14 @@ const SigninForm = () => {
               </div>
 
               <div className="space-y-2">
-                <Input
+                <Label htmlFor="signin-password">Mot de passe</Label>
+                {/* PasswordInput : le même champ, avec le bouton 👁️ pour afficher le mot de passe */}
+                <PasswordInput
+                  id="signin-password"
                   {...register('password')}
-                  type="password"
-                  placeholder="Mot de passe"
+                  autoComplete="current-password"
                   disabled={isPending}
-                  className="h-11"
+                  className="h-11 pr-11"
                 />
                 {errors.password && (
                   <p className="px-1 text-xs text-red-500">
@@ -137,9 +144,10 @@ const SigninForm = () => {
                 )}
               </div>
 
+              {/* Pilule noire : l'action principale */}
               <Button
                 type="submit"
-                className="h-11 w-full"
+                className="h-11 w-full rounded-full bg-black font-semibold text-white hover:bg-black/80"
                 disabled={isPending}
               >
                 {isPending ? 'Connexion...' : 'Se connecter'}
@@ -149,7 +157,7 @@ const SigninForm = () => {
             <div className="pt-2 text-center">
               <Link
                 href="/forgot-password"
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs font-medium text-purple-700 hover:underline"
               >
                 Mot de passe oublié ?
               </Link>

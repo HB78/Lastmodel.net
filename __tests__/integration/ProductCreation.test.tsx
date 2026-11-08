@@ -59,7 +59,7 @@ describe('ProductCreation Integration', () => {
     render(<CreateProductForm origins={[]} />);
 
     // Vérifie la présence des champs principaux
-    expect(screen.getByLabelText(/nom complet/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/pseudo/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
     expect(screen.getByTestId('city-input')).toBeInTheDocument();
     expect(
@@ -72,13 +72,13 @@ describe('ProductCreation Integration', () => {
     render(<CreateProductForm origins={[]} />);
 
     // Tape quelque chose de court dans le champ nom pour déclencher la validation
-    const nameInput = screen.getByLabelText(/nom complet/i);
+    const nameInput = screen.getByLabelText(/pseudo/i);
     await user.type(nameInput, 'A'); // Trop court
     await user.clear(nameInput); // Efface pour déclencher l'erreur
 
     // Vérifie que les erreurs de validation apparaissent
     await waitFor(() => {
-      expect(screen.getByText(/Le nom doit contenir au moins 3 caractères/i)).toBeInTheDocument();
+      expect(screen.getByText(/Le pseudo doit contenir au moins 3 caractères/i)).toBeInTheDocument();
     });
   });
 
@@ -92,7 +92,7 @@ describe('ProductCreation Integration', () => {
     render(<CreateProductForm origins={[]} />);
 
     // Remplit le formulaire
-    await user.type(screen.getByLabelText(/nom complet/i), 'Jean Dupont');
+    await user.type(screen.getByLabelText(/pseudo/i), 'Jean Dupont');
     await user.type(
       screen.getByLabelText(/description/i),
       'Description détaillée du profil'
@@ -122,7 +122,7 @@ describe('ProductCreation Integration', () => {
     render(<CreateProductForm origins={[]} />);
 
     // Remplit et soumet le formulaire
-    await user.type(screen.getByLabelText(/nom complet/i), 'Test User');
+    await user.type(screen.getByLabelText(/pseudo/i), 'Test User');
     await user.click(screen.getByRole('button', { name: /mettre à jour le profil/i }));
 
     // Vérifie que l'erreur est affichée
@@ -169,7 +169,7 @@ describe('ProductCreation Integration', () => {
 
     render(<CreateProductForm origins={[]} />);
 
-    const nameInput = screen.getByLabelText(/nom complet/i);
+    const nameInput = screen.getByLabelText(/pseudo/i);
 
     // Remplit le formulaire
     await user.type(nameInput, 'Test User');
