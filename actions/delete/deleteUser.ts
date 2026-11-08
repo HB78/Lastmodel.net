@@ -3,7 +3,7 @@
 import { auth } from '@/lib/better-auth-setup/auth';
 import { prisma } from '@/lib/prisma-setup/db';
 import { APIError } from 'better-auth/api';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -70,6 +70,7 @@ export async function deleteUserAction(
     if (isSelf) {
       await prisma.user.delete({ where: { id: userId } });
       await auth.api.signOut({ headers: headersList });
+      revalidateTag(`profile-${userId}`); // la page /produits/[id] disparaît tout de suite
       redirect('/signin');
     }
 

@@ -8,7 +8,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL") // pooler → utilisé par l'appli
+  directUrl = env("DIRECT_URL") // direct → utilisé par les migrations
 }
 
 // ============= ENUMS =============
@@ -90,6 +91,7 @@ model user {
   receivedComments commentaire[] @relation("CommentProfile")
   givenLikes       like[]        @relation("UserLikes")
   receivedLikes    like[]        @relation("ProfileLiked")
+  profileViews     profileView[]
 
   @@map("users")
 }
@@ -153,6 +155,21 @@ model like {
 
   @@unique([userId, profileId])
   @@map("likes")
+}
+
+// 📊 Visites d'un profil (stats pour les abonnés)
+// 1 ligne = 1 visiteur sur 1 profil pour 1 jour (voir lib/profileViews.ts)
+model profileView {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   user     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  viewerKey String // empreinte anonyme du visiteur (hash), PAS une relation
+  day       DateTime @db.Date // le jour seulement, sans l'heure
+  createdAt DateTime @default(now())
+
+  @@unique([profileId, viewerKey, day]) // 1 visite / visiteur / jour
+  @@index([profileId, day])
+  @@map("profile_views")
 }
 
 model contactMessage {

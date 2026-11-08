@@ -11,11 +11,14 @@ import {
   createNotFoundMetadata,
   createProfileMetadata,
 } from '@/lib/metadata/profileMetadata';
+import { recordProfileView } from '@/lib/profileViews';
 import { getSession } from '@/tools';
 import { ArrowLeft, Phone } from 'lucide-react';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { after } from 'next/server';
 import { cache } from 'react';
 
 interface ProductPageProps {
@@ -65,6 +68,27 @@ export default async function ProductPage({ params }: ProductPageProps) {
   if (!product || !id) {
     notFound();
   }
+
+  // 📊 COMPTER LA VISITE (stats des abonnés → lib/profileViews.ts)
+  // ⚠️ headers() doit être lu ICI : Next.js l'interdit à l'intérieur de after()
+  const headersList = await headers();
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0] ?? 'unknown';
+  const userAgent = headersList.get('user-agent') ?? '';
+
+  // after() : le visiteur reçoit sa page tout de suite, l'écriture en base
+  // se fait APRÈS. Si elle plante, la page s'affiche quand même.
+  after(async () => {
+    try {
+      await recordProfileView({
+        profileId: id,
+        viewerId: session?.user.id,
+        ip,
+        userAgent,
+      });
+    } catch (error) {
+      console.error('Erreur enregistrement visite profil:', error);
+    }
+  });
 
   // Formater l'âge
   const ageText = product.age ? `${product.age} ans` : 'Âge non renseigné';

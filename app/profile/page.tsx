@@ -3,8 +3,13 @@ import { getSessionWithProfileCheck } from '@/tools';
 import { Camera, CreditCard, Edit3, Settings, Shield, Trash2 } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import ImageGallerie from '../../components/profilePage/ImageGallerie';
 import PasswordCard from '../../components/profilePage/PasswordCard';
+import {
+  ProfileStatsCard,
+  ProfileStatsSkeleton,
+} from '../../components/profilePage/ProfileStatsCard';
 import { UserInfoCard } from '../../components/profilePage/UserInfoCard';
 
 export default async function ProfilePage() {
@@ -83,6 +88,12 @@ export default async function ProfilePage() {
             </Link>
           </div>
         </div>
+
+        {/* 📊 Statistiques : la page s'affiche tout de suite,
+            les chiffres arrivent dès que la base a répondu */}
+        <Suspense fallback={<ProfileStatsSkeleton />}>
+          <ProfileStatsCard />
+        </Suspense>
 
         {/* Grille des cards principales */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
