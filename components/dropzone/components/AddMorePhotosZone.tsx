@@ -13,6 +13,7 @@ interface AddMorePhotosZoneProps {
   getRootProps: any; // Props de react-dropzone
   isDragActive: boolean; // True si l'utilisateur fait glisser des fichiers
   totalPhotos: number; // Nombre total de photos uploadées
+  maxPhotos: number; // Limite selon l'abonnement (lib/photoLimits.ts)
 }
 
 /**
@@ -23,7 +24,7 @@ interface AddMorePhotosZoneProps {
  *
  * 1. ÉTAT NORMAL : Instructions et informations sur les formats acceptés
  * 2. ÉTAT DRAG ACTIVE : Message d'encouragement pendant le glisser-déposer
- * 3. ÉTAT LIMITE ATTEINTE : Désactivé après 11 photos maximum
+ * 3. ÉTAT LIMITE ATTEINTE : Désactivé une fois maxPhotos atteint (2 FREE / 11 payant)
  *
  * Fonctionnalités :
  * - Zone de drop interactive avec react-dropzone
@@ -36,10 +37,10 @@ export function AddMorePhotosZone({
   getRootProps,
   isDragActive,
   totalPhotos,
+  maxPhotos,
 }: AddMorePhotosZoneProps) {
-  // Constante pour la limite de photos
-  const MAX_PHOTOS = 11;
-  const canAddMore = totalPhotos < MAX_PHOTOS;
+  // Limite reçue de Dropzone.tsx (avant : 11 en dur, même pour un compte FREE)
+  const canAddMore = totalPhotos < maxPhotos;
 
   // Si la limite est atteinte, afficher un message informatif
   if (!canAddMore) {
@@ -53,7 +54,7 @@ export function AddMorePhotosZone({
                 Limite de photos atteinte
               </p>
               <p className="text-xs text-gray-400">
-                Maximum {MAX_PHOTOS} photos autorisées
+                Maximum {maxPhotos} photos autorisées
               </p>
             </div>
           </div>
@@ -101,7 +102,7 @@ export function AddMorePhotosZone({
 
               {/* Indicateur de photos restantes */}
               <p className="mt-1 text-xs text-violet-500">
-                {totalPhotos}/{MAX_PHOTOS} photos utilisées
+                {totalPhotos}/{maxPhotos} photos utilisées
               </p>
             </div>
           </div>

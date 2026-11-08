@@ -22,7 +22,8 @@ export function usePhotoUpload(
   getInfo: (url: string) => Promise<void>,
   onUploadStart?: () => void,
   onUploadComplete?: () => void,
-  maxPhotos: number = 11
+  maxPhotos: number = 11,
+  onDelete?: (url: string) => void
 ) {
   // État local des fichiers uploadés/en cours d'upload
   const [files, setFiles] = useState<FileItem[]>([]);
@@ -111,6 +112,13 @@ export function usePhotoUpload(
           // Fichier déjà uploadé : suppression sur S3
           const result = await deleteImagesAction(fileId);
           if (result?.success) {
+            // Prévenir le parent AVANT de retirer la photo de l'état local
+            // (sinon le formulaire garde l'URL et l'envoie au serveur)
+            const deletedUrl = files.find(
+              (item) => item.file.name === fileName
+            )?.url;
+            if (deletedUrl) onDelete?.(deletedUrl);
+
             // Suppression réussie : retirer de l'état local
             setFiles((prevFiles) =>
               prevFiles.filter((item) => item.file.name !== fileName)

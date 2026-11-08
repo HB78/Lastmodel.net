@@ -31,10 +31,12 @@ export function DropZone({
   getInfo,
   onUploadStart,
   onUploadComplete,
+  onDelete,
 }: {
   getInfo: (url: string) => Promise<void>;
   onUploadStart?: () => void;
   onUploadComplete?: () => void;
+  onDelete?: (url: string) => void;
 }) {
   // Hook personnalisé gérant toute la logique d'upload et de suppression
   const { data: session } = useSession();
@@ -47,7 +49,8 @@ export function DropZone({
     getInfo,
     onUploadStart,
     onUploadComplete,
-    maxPhotos
+    maxPhotos,
+    onDelete
   );
 
   // Configuration de react-dropzone avec validation et gestion d'erreurs
@@ -98,6 +101,7 @@ export function DropZone({
         getRootProps={getRootProps}
         isDragActive={isDragActive}
         totalPhotos={files.length}
+        maxPhotos={maxPhotos}
       />
 
       {/* Galerie des autres photos (petites) - Photos secondaires */}

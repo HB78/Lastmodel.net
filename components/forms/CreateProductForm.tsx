@@ -41,7 +41,6 @@ interface CreateProductFormProps {
 const CreateProductForm = ({ origins }: CreateProductFormProps) => {
   const [isPending, startTransition] = useTransition();
 
-  const [productImages, setProductImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
@@ -52,6 +51,7 @@ const CreateProductForm = ({ origins }: CreateProductFormProps) => {
     formState: { errors, isValid },
     watch,
     setValue,
+    getValues,
   } = useForm({
     resolver: zodResolver(CreateUserProfilSchema),
     mode: 'onChange',
@@ -519,12 +519,22 @@ const CreateProductForm = ({ origins }: CreateProductFormProps) => {
               <div className="min-h-0 flex-1 overflow-hidden">
                 <DropZone
                   getInfo={async (url) => {
-                    // Ajouter l'image à la liste des images du produit
-                    const newImages = [...productImages, url];
-                    setProductImages(newImages);
-                    // Mettre à jour le champ images avec toutes les images
-                    setValue('images', newImages);
+                    // getValues lit la valeur ACTUELLE du formulaire (pas une copie figée)
+                    // → si 2 photos finissent en même temps, la 2ᵉ voit bien la 1ʳᵉ
+                    const currentImages = getValues('images') ?? [];
+                    setValue('images', [...currentImages, url], {
+                      shouldValidate: true,
+                    });
                     toast.success('Image uploadée avec succès !');
+                  }}
+                  onDelete={(url) => {
+                    // Retirer aussi l'URL du formulaire, sinon elle part au serveur
+                    const currentImages = getValues('images') ?? [];
+                    setValue(
+                      'images',
+                      currentImages.filter((image) => image !== url),
+                      { shouldValidate: true }
+                    );
                   }}
                   onUploadStart={() => setIsUploading(true)}
                   onUploadComplete={() => setIsUploading(false)}

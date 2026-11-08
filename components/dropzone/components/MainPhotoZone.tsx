@@ -91,6 +91,7 @@ export function MainPhotoZone({
           {/* Bouton pour changer la photo principale (fonctionnalité future) */}
           <div className="absolute bottom-3 left-3">
             <Button
+              type="button"
               variant="outline"
               size="sm"
               className="bg-white/90 backdrop-blur-sm hover:bg-white"
