@@ -73,7 +73,7 @@ export function PricingCard({ plan }: PricingCardProps) {
             className="text-xl font-bold tracking-tight text-gray-900 capitalize"
           >
             {plan.name === 'FREE'
-              ? 'Gratuit'
+              ? 'Visiteurs'
               : plan.name === 'MONTHLY'
                 ? 'Premium'
                 : 'VIP'}
