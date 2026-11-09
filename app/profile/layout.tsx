@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/navbar/navbar';
-import { getSessionWithProfileCheck } from '@/tools';
+import { getSession } from '@/tools';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -15,10 +15,13 @@ export default async function ProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Une seule fonction qui fait tout : session + vérification profil
-  const { session, isProfileComplete } = await getSessionWithProfileCheck();
+  // On vérifie seulement que l'utilisateur est connecté.
+  // Plus de redirection vers /create : un visiteur (qui like, commente,
+  // met en favoris) doit pouvoir gérer son compte sans créer d'annonce.
+  // Les pages propres à l'annonce (/profile/edit, /profile/photos)
+  // gardent leur propre vérification.
+  const session = await getSession();
   if (!session?.user?.id) redirect('/signin');
-  if (!isProfileComplete) redirect('/create');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">

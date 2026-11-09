@@ -14,12 +14,14 @@ import Social from './CardWrapperHelper/Social';
 const CardWrapper = ({
   children,
   headerLabel,
+  headerLabelColor,
   backButtonLabel,
   backButtonHref,
   showSocial,
 }: {
   children: React.ReactNode;
   headerLabel: string;
+  headerLabelColor?: string; // ex : 'text-green-700' (facultatif)
   backButtonLabel: string;
   backButtonHref: string;
   showSocial: boolean;
@@ -27,7 +29,7 @@ const CardWrapper = ({
   return (
     <Card className="w-[95%] bg-white p-3 shadow-md md:w-[600px] lg:w-[500px] xl:w-[500px]">
       <CardHeader>
-        <AuthHearder label={headerLabel} />
+        <AuthHearder label={headerLabel} labelColor={headerLabelColor} />
       </CardHeader>
       <CardContent>{children}</CardContent>
       {/* si showSocial fait partie des props on la montre */}

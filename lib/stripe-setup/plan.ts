@@ -23,9 +23,9 @@ export const AUTH_PLANS: AppAuthPlan[] = [
     features: [
       {
         icon: Heart,
-        label: 'Likes ilimités',
+        label: 'Likes illimités',
         description:
-          'Visitez les profils qui vous intéressent le plus, une simple inscriptions suffit. Votre profil ne sera pas visible par les autres visiteurs',
+          'Visitez les profils qui vous intéressent le plus, une simple inscription suffit. Votre profil ne sera pas visible par les autres visiteurs',
       },
     ],
   },
@@ -33,7 +33,7 @@ export const AUTH_PLANS: AppAuthPlan[] = [
     name: 'MONTHLY',
     isPopular: true,
     description:
-      'Accès complet réservé aux personnes souhaitant etre visible dans les recherches.',
+      'Accès complet réservé aux personnes souhaitant être visibles dans les recherches.',
     priceId: process.env.STRIPE_PRO_MONTHLY_PLAN_ID,
     price: 20,
     currency: 'EUR',
@@ -42,7 +42,7 @@ export const AUTH_PLANS: AppAuthPlan[] = [
         icon: MessageCircle,
         label: 'Vous faites partie des profils recherchés et mis en avant',
         description:
-          'Les visiteurs peuvent visiter et liker votre profil pour le mettre en favoris. Vous pouvez uploder 11 photos',
+          "Les visiteurs peuvent visiter et liker votre profil pour le mettre en favoris. Vous pouvez publier jusqu'à 11 photos.",
       },
     ],
   },
@@ -57,7 +57,7 @@ export const AUTH_PLANS: AppAuthPlan[] = [
         icon: Crown,
         label: 'Profil premium',
         description:
-          'Badge premium visible. Vous bénéficiez de toutes les fonctionnalité du plan MONTHLY et votre profil est mis en avant prioritairement dans les recherches. Vous bénéficiez également de deux mois gratuits.',
+          'Badge premium visible. Vous bénéficiez de toutes les fonctionnalités du plan mensuel et votre profil est mis en avant prioritairement dans les recherches. Vous bénéficiez également de deux mois gratuits.',
       },
     ],
   },

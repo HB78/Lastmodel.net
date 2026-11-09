@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Heart, LogOut, Settings, User } from 'lucide-react';
+import { Heart, LogOut, Megaphone, Settings, User } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { Signout } from '../auth/signoutButton/Signout';
 
@@ -116,19 +116,37 @@ export function UserMenu({
         </DropdownMenuItem>
 
         {session?.user.subscriptionType === 'FREE' && (
-          <DropdownMenuItem asChild>
-            <Link
-              href="/pricing"
-              className="flex cursor-pointer items-center px-4 py-3 text-black transition-colors hover:bg-purple-50"
-              role="menuitem"
-            >
-              <Settings
-                className="mr-3 h-4 w-4 text-purple-600"
-                aria-hidden="true"
-              />
-              <span className="text-sm font-medium">Pricing</span>
-            </Link>
-          </DropdownMenuItem>
+          <>
+            {/* Pour le visiteur qui change d'avis et veut publier.
+                Si son annonce existe déjà, /create le renvoie sur /profile
+                (qui l'invite à prendre un abonnement) */}
+            <DropdownMenuItem asChild>
+              <Link
+                href="/create"
+                className="flex cursor-pointer items-center px-4 py-3 text-black transition-colors hover:bg-purple-50"
+                role="menuitem"
+              >
+                <Megaphone
+                  className="mr-3 h-4 w-4 text-purple-600"
+                  aria-hidden="true"
+                />
+                <span className="text-sm font-medium">Publier mon profil</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/pricing"
+                className="flex cursor-pointer items-center px-4 py-3 text-black transition-colors hover:bg-purple-50"
+                role="menuitem"
+              >
+                <Settings
+                  className="mr-3 h-4 w-4 text-purple-600"
+                  aria-hidden="true"
+                />
+                <span className="text-sm font-medium">Tarifs</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
         )}
 
         <DropdownMenuSeparator className="bg-gray-200/50" />

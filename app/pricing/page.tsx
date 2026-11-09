@@ -26,7 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function PricingPage() {
+export default async function PricingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ etape?: string }>;
+}) {
+  // ?etape=2 : on arrive de /create (CreateProductForm), le profil vient
+  // d'être créé → on affiche "Étape 2 sur 2" pour finir le parcours
+  const { etape } = await searchParams;
+  const isLastStep = etape === '2';
+
   const session = await getSession();
   const typeOfSubscription = session?.user?.subscriptionType;
   const isLoggedIn = !!session?.user;
@@ -38,6 +47,17 @@ export default async function PricingPage() {
         <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
           {/* Header compact et moderne */}
           <header className="mb-6 text-center sm:mb-10">
+            {isLastStep && (
+              <div className="mx-auto mb-6 max-w-2xl space-y-2">
+                <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold tracking-wide text-amber-800 uppercase">
+                  Étape 2 sur 2
+                </span>
+                <p className="text-base text-gray-700 sm:text-lg">
+                  Votre profil est prêt. Choisissez votre abonnement pour
+                  qu&apos;il apparaisse sur l&apos;accueil.
+                </p>
+              </div>
+            )}
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white/90 px-4 py-2 shadow-sm backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-purple-600" />
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-sm font-semibold text-transparent">

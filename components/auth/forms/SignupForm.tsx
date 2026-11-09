@@ -27,6 +27,14 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
+    // Même message et même page, que l'email soit nouveau ou déjà inscrit
+    const goToSuccessPage = () => {
+      toast.success(
+        'Vérifiez votre boîte mail pour activer votre compte.'
+      );
+      router.push(`/signup/success?email=${encodeURIComponent(data.email)}`);
+    };
+
     startTransition(async () => {
       try {
         const { error } = await signUp.email(
@@ -36,23 +44,19 @@ const SignupForm = () => {
             name: data.name,
           },
           {
-            onSuccess: () => {
-              toast.success(
-                'Inscription réussie ! Veuillez vérifier votre email pour activer votre compte.'
-              );
-              router.push(
-                `/signup/success?email=${encodeURIComponent(data.email)}`
-              );
-            },
+            onSuccess: goToSuccessPage,
           }
         );
 
         if (error && typeof error === 'object' && 'code' in error) {
           switch (error.code) {
+            // 🔒 Email déjà inscrit : on fait EXACTEMENT comme un succès.
+            // Avant : "Cet email est déjà utilisé" → n'importe qui pouvait
+            // taper l'email de quelqu'un pour savoir s'il est inscrit ici.
+            // La vraie personne, elle, sait qu'elle a déjà un compte.
             case 'USER_ALREADY_EXISTS':
-              toast.error(
-                'Cet email est déjà utilisé. Veuillez utiliser un autre email.'
-              );
+            case 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL':
+              goToSuccessPage();
               break;
             default:
               toast.error(

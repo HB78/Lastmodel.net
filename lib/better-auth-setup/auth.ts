@@ -117,16 +117,13 @@ const options = {
           select: { id: true, emailVerified: true },
         });
 
-        if (!user) {
-          throw new APIError('BAD_REQUEST', {
-            message: "Email non trouvé. Veuillez vous inscrire d'abord.",
-          });
-        }
-
-        if (user.emailVerified === true) {
-          throw new APIError('BAD_REQUEST', {
-            message: 'Cet email est déjà vérifié.',
-          });
+        // 🔒 Email inconnu ou déjà vérifié : on répond "OK" sans rien
+        // envoyer, EXACTEMENT comme un envoi réussi.
+        // Avant : "Email non trouvé" / "Cet email est déjà vérifié"
+        // → n'importe qui pouvait tester un email pour savoir s'il est inscrit.
+        // (C'est ce que fait Better Auth tout seul quand l'email n'existe pas.)
+        if (!user || user.emailVerified === true) {
+          return ctx.json({ status: true });
         }
 
         // Rate limiting : vérifier les tentatives récentes

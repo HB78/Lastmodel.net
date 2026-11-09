@@ -1,6 +1,12 @@
 import Link from 'next/link';
 
-const AuthHearder = ({ label }: { label: string }) => {
+const AuthHearder = ({
+  label,
+  labelColor = 'text-gray-900', // couleur du titre (gris foncé par défaut)
+}: {
+  label: string;
+  labelColor?: string;
+}) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-y-4">
       {/* Marque cliquable : seul moyen de revenir à l'accueil (pas de navbar ici) */}
@@ -10,7 +16,7 @@ const AuthHearder = ({ label }: { label: string }) => {
       >
         Lastmodel
       </Link>
-      <h1 className="text-sm font-semibold text-gray-900">{label}</h1>
+      <h1 className={`text-sm font-semibold ${labelColor}`}>{label}</h1>
     </div>
   );
 };

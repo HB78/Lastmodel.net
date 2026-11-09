@@ -30,6 +30,7 @@ import {
   Home,
   LogOut,
   Mail,
+  Megaphone,
   User,
 } from 'lucide-react';
 import { Link } from 'next-view-transitions';
@@ -177,6 +178,21 @@ export function MobileDrawer({
                     />
                     Mon Profil
                   </Link>
+                  {session.user.subscriptionType === 'FREE' && (
+                    <Link
+                      href="/create"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors hover:bg-white"
+                      role="menuitem"
+                      aria-label="Publier mon profil"
+                    >
+                      <Megaphone
+                        className="h-5 w-5 text-gray-500"
+                        aria-hidden="true"
+                      />
+                      Publier mon profil
+                    </Link>
+                  )}
                   {session.user.subscriptionType === 'FREE' && (
                     <Link
                       href="/pricing"

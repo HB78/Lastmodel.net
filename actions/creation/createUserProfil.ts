@@ -177,7 +177,13 @@ export async function createUserProfilAction(formData: FormData) {
     revalidateTag(`profile-${userId}`);
     revalidateTag('profiles'); // Pour la liste des profils sur la page d'accueil
 
-    return { error: null, user, status: 200 };
+    // isPaid : le formulaire s'en sert pour choisir la page suivante
+    // (gratuit → /pricing pour l'étape 2/2, abonné → /profile)
+    const isPaid =
+      findUser.subscriptionType === 'MONTHLY' ||
+      findUser.subscriptionType === 'YEARLY';
+
+    return { error: null, user, isPaid, status: 200 };
   } catch (error) {
     console.error('Erreur lors de la mise à jour du profil:', error);
     return { error: 'Erreur interne du serveur', status: 500 };

@@ -4,7 +4,7 @@ import { Camera, CreditCard, Edit3, Settings, Shield, Trash2 } from 'lucide-reac
 import { Link } from 'next-view-transitions';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
-import ImageGallerie from '../../components/profilePage/ImageGallerie';
+import { AdStatusCard } from '../../components/profilePage/AdStatusCard';
 import PasswordCard from '../../components/profilePage/PasswordCard';
 import {
   ProfileStatsCard,
@@ -16,7 +16,7 @@ export default async function ProfilePage() {
   const { session, isProfileComplete } = await getSessionWithProfileCheck();
 
   if (!session?.user?.id) redirect('/signin');
-  if (!isProfileComplete) redirect('/create');
+  // (plus de redirect('/create') : la page s'adapte, voir AdStatusCard)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
@@ -46,6 +46,10 @@ export default async function ProfilePage() {
 
         {/* Navigation par onglets visuels */}
         <div className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {/* Informations et Photos concernent l'annonce : sans annonce,
+              elles renverraient vers /create → on les cache */}
+          {isProfileComplete && (
+            <>
           <div className="group w-full cursor-pointer rounded-2xl border border-white/50 bg-white/80 p-4 text-center shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
             <Link href={'/profile/edit'}>
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 transition-transform group-hover:scale-110">
@@ -67,6 +71,8 @@ export default async function ProfilePage() {
               <p className="mt-1 text-xs text-gray-500">Galerie</p>
             </Link>
           </div>
+            </>
+          )}
 
           <div className="group w-full cursor-pointer rounded-2xl border border-white/50 bg-white/80 p-4 text-center shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
             <Link href={'/profile/password'}>
@@ -122,26 +128,13 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          {/* Card 2: Gestion des photos */}
+          {/* Card 2: Mon annonce (s'adapte : visiteur, annonceur, abonné) */}
           <div className="lg:col-span-1">
-            <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/80 shadow-xl backdrop-blur-sm">
-              <div className="border-b border-gray-100/50 p-6">
-                <div className="mb-2 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-100 to-purple-200">
-                    <Camera className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Galerie photos
-                  </h2>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Ajoutez et organisez vos photos de profil
-                </p>
-              </div>
-              <div className="p-6">
-                <ImageGallerie />
-              </div>
-            </div>
+            <AdStatusCard
+              userId={session.user.id}
+              isProfileComplete={isProfileComplete}
+              subscriptionType={session.user.subscriptionType}
+            />
           </div>
 
           {/* Card 3: Mot de passe */}

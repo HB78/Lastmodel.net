@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma-setup/db';
 import { APIError } from 'better-auth/api';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { redirect, unstable_rethrow } from 'next/navigation';
 
 // Type pour l'état retourné
 type DeleteUserState = {
@@ -68,8 +68,11 @@ export async function deleteUserAction(
     }
 
     if (isSelf) {
-      await prisma.user.delete({ where: { id: userId } });
+      // Déconnexion AVANT la suppression : signOut supprime la session
+      // et le cookie. Dans l'autre sens, la session était déjà supprimée
+      // (en cascade avec le user) → "No record was found for a delete"
       await auth.api.signOut({ headers: headersList });
+      await prisma.user.delete({ where: { id: userId } });
       revalidateTag(`profile-${userId}`); // la page /produits/[id] disparaît tout de suite
       redirect('/signin');
     }
@@ -91,6 +94,11 @@ export async function deleteUserAction(
       message: 'Compte supprimé avec succès',
     };
   } catch (err) {
+    // redirect() fonctionne en lançant une erreur spéciale (NEXT_REDIRECT).
+    // Sans cette ligne, ce catch l'attrapait et l'affichait comme une erreur.
+    // unstable_rethrow relance les erreurs de Next.js et laisse passer les autres.
+    unstable_rethrow(err);
+
     console.error('Erreur lors de la suppression:', err);
 
     if (err instanceof APIError) {

@@ -15,10 +15,11 @@ import { BillingView } from '../../../components/openStripePortal/billing-view';
 
 export default async function BillingPage() {
   //les users en FREE plan ne peuvent pas acceder à cette page
-  const { session, isProfileComplete } = await getSessionWithProfileCheck();
+  const { session } = await getSessionWithProfileCheck();
 
   if (!session?.user?.id) redirect('/signin');
-  if (!isProfileComplete) redirect('/create');
+  // (plus de redirection vers /create : un abonné qui n'a pas encore
+  // rempli son annonce doit quand même pouvoir gérer son paiement)
 
   // Vérification spécifique pour la page billing
   const hasActiveSubscription = session?.user?.subscriptionType !== 'FREE';

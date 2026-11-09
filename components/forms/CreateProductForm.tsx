@@ -96,8 +96,17 @@ const CreateProductForm = ({ origins }: CreateProductFormProps) => {
           return;
         }
 
-        toast.success('Profil mis à jour avec succès !');
-        router.push('/profile');
+        // ÉTAPE SUIVANTE (voir la page "Email vérifié !" : ① profil ② abonnement)
+        // - compte gratuit → /pricing : étape 2/2, choisir sa formule
+        //   (sans abonnement, le profil n'apparaît pas sur l'accueil)
+        // - déjà abonné → /profile : le profil est en ligne
+        if (result.isPaid) {
+          toast.success('Votre profil est en ligne !');
+          router.push('/profile');
+        } else {
+          toast.success('Profil créé ! Dernière étape : votre abonnement.');
+          router.push('/pricing?etape=2');
+        }
       } catch (error) {
         console.error('Erreur lors de la mise à jour du profil:', error);
         toast.error(
