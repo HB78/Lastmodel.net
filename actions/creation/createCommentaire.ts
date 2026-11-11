@@ -50,7 +50,7 @@ export async function createCommentaireAction(formData: FormData) {
     });
 
     // 7. Revalider la page du profil pour afficher le nouveau commentaire
-    revalidatePath(`/profile/${validatedData.profileId}`);
+    revalidatePath(`/produits/${validatedData.profileId}`);
 
     return {
       message: 'Commentaire créé avec succès',

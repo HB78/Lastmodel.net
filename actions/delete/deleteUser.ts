@@ -2,8 +2,9 @@
 
 import { auth } from '@/lib/better-auth-setup/auth';
 import { prisma } from '@/lib/prisma-setup/db';
+import { deleteUserFolderFromS3 } from '@/lib/s3-setup/aws-s3-config';
 import { APIError } from 'better-auth/api';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect, unstable_rethrow } from 'next/navigation';
 
@@ -73,19 +74,17 @@ export async function deleteUserAction(
       // (en cascade avec le user) → "No record was found for a delete"
       await auth.api.signOut({ headers: headersList });
       await prisma.user.delete({ where: { id: userId } });
+
+      // Effacer le dossier R2 du user (images/{userId}/).
+      // Si R2 échoue, on continue : le compte est déjà supprimé.
+      try {
+        await deleteUserFolderFromS3(userId);
+      } catch (s3Error) {
+        console.warn(`⚠️ Dossier R2 non supprimé pour ${userId}`, s3Error);
+      }
+
       revalidateTag(`profile-${userId}`); // la page /produits/[id] disparaît tout de suite
       redirect('/signin');
-    }
-
-    if (isAdmin && !isSelf) {
-      await prisma.user.delete({ where: { id: userId } });
-      revalidatePath('/profile');
-      revalidatePath('/');
-      return {
-        success: true,
-        error: null,
-        message: 'Compte supprimé avec succès',
-      };
     }
 
     return {

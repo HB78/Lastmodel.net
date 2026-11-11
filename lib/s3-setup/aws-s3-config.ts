@@ -19,6 +19,8 @@ import {
 } from '@/tools/protectS3Storage';
 import {
   DeleteObjectCommand,
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -126,4 +128,32 @@ export async function deleteFileFromS3(key: string) {
       'Erreur lors de la suppression S3 : ' + (error as Error).message
     );
   }
+}
+
+// Supprime TOUT le dossier d'un utilisateur sur R2 : images/{userId}/
+// (photos enregistrées + photos uploadées mais jamais enregistrées)
+//
+// ⚠️ Comme deleteFileFromS3, cette fonction ne vérifie RIEN elle-même.
+// L'appeler UNIQUEMENT avec session.user.id (ou depuis le cron protégé par
+// CRON_SECRET), JAMAIS avec un id envoyé par le navigateur.
+export async function deleteUserFolderFromS3(userId: string) {
+  const bucket = process.env.AWS_S3_BUCKET_NAME ?? '';
+
+  // 1. Lister les fichiers du dossier
+  //    Le "/" final évite de toucher le dossier d'un autre user dont l'id
+  //    commencerait pareil (clx1 / clx123…)
+  const list = await s3.send(
+    new ListObjectsV2Command({ Bucket: bucket, Prefix: `images/${userId}/` })
+  );
+
+  // Dossier vide ou inexistant → rien à faire
+  if (!list.Contents || list.Contents.length === 0) return;
+
+  // 2. Les supprimer tous en une seule requête
+  await s3.send(
+    new DeleteObjectsCommand({
+      Bucket: bucket,
+      Delete: { Objects: list.Contents.map((file) => ({ Key: file.Key })) },
+    })
+  );
 }

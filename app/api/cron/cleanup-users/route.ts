@@ -17,7 +17,9 @@ export async function GET(request: Request) {
     const authHeader = request.headers.get('authorization');
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
 
-    if (authHeader !== expectedAuth) {
+    // Si le secret n'est pas configuré, on refuse tout
+    // (sinon expectedAuth vaudrait "Bearer undefined")
+    if (!process.env.CRON_SECRET || authHeader !== expectedAuth) {
       console.warn('⚠️ Tentative d\'accès non autorisée au Cron cleanup');
       return NextResponse.json(
         { error: 'Unauthorized' },
