@@ -37,7 +37,18 @@ export function PhotoManagement({
     initialPhotos,
     (state, action: PhotoAction) => {
       if (action.type === 'delete') {
-        return state.filter((photo) => photo.id !== action.photoId);
+        // Même règle que deletePhotoAction : si on supprime la principale,
+        // la suivante le devient. remaining[0] est bien la "suivante" car
+        // la page trie par isMain puis order.
+        const deleted = state.find((photo) => photo.id === action.photoId);
+        const remaining = state.filter(
+          (photo) => photo.id !== action.photoId
+        );
+
+        if (deleted?.isMain && remaining.length > 0) {
+          remaining[0] = { ...remaining[0], isMain: true };
+        }
+        return remaining;
       } else if (action.type === 'add') {
         return [...state, action.photo];
       }

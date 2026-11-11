@@ -47,36 +47,66 @@ export async function deletePhotoAction(
       };
     }
 
-    // 🔒 ÉTAPE 1: Supprimer le fichier de Cloudflare R2
+    // Interdire la suppression de la dernière photo :
+    // sans photo, le profil disparaîtrait de l'accueil (qui filtre sur isMain).
+    // Le bouton est grisé côté navigateur, mais c'est ici que la règle compte.
+    const photoCount = await prisma.photo.count({
+      where: { userId: session.user.id },
+    });
+
+    if (photoCount <= 1) {
+      return {
+        success: false,
+        message: 'Action impossible',
+        error: 'Ajoutez une autre photo avant de supprimer celle-ci',
+      };
+    }
+
+    // 🗃️ ÉTAPE 1: Supprimer la photo de la base de données
+    // Dans une transaction : si la photo supprimée était la principale,
+    // la suivante (plus petit order) prend sa place. Les deux opérations
+    // réussissent ensemble ou sont annulées ensemble.
+    await prisma.$transaction(async (tx) => {
+      await tx.photo.delete({
+        where: { id: photoId },
+      });
+
+      if (photo.isMain) {
+        const next = await tx.photo.findFirst({
+          where: { userId: session.user.id },
+          orderBy: { order: 'asc' },
+          select: { id: true },
+        });
+
+        if (next) {
+          await tx.photo.update({
+            where: { id: next.id },
+            data: { isMain: true },
+          });
+        }
+      }
+    });
+
+    // 🔒 ÉTAPE 2: Supprimer le fichier de Cloudflare R2
+    // Fait APRÈS la base : si R2 échoue, on garde au pire un fichier orphelin
+    // invisible, au lieu d'une photo en base qui pointe vers un fichier effacé.
     try {
       // 📍 EXTRACTION DE LA CLÉ DU FICHIER
       // On transforme l'URL complète en objet URL pour extraire le chemin
       // Exemple: "https://bucket.r2.dev/images/photo.jpg" → objet URL
-      // on peut maintenant utiliser url.pathname ou url.hostname pour eviter le slice sur photo.url
       const url = new URL(photo.url);
 
-      // On extrait le chemin du fichier et on enlève le "/" du début
       // url.pathname = "/images/photo.jpg"
       // substring(1) = "images/photo.jpg" (sans le "/")
       const fileKey = url.pathname.substring(1);
 
-      // 🗑️ SUPPRESSION DU FICHIER SUR CLOUDFLARE R2
-      // On utilise la clé extraite pour supprimer le fichier physique
       await deleteFileFromS3(fileKey);
       console.log(`✅ Fichier S3 supprimé: ${fileKey}`);
     } catch (s3Error) {
-      // ⚠️ GESTION D'ERREUR S3
-      // Si la suppression S3 échoue (fichier déjà supprimé, erreur réseau, etc.)
-      // On log l'erreur mais on continue quand même
+      // Si la suppression R2 échoue, la photo est déjà retirée de la base :
+      // on log et on continue
       console.warn(`⚠️ Erreur lors de la suppression S3: ${s3Error}`);
-      // On continue même si la suppression S3 échoue
     }
-
-    // 🗃️ ÉTAPE 2: Supprimer la photo de la base de données
-    // On supprime l'entrée de la table "photos" en utilisant l'ID
-    await prisma.photo.delete({
-      where: { id: photoId },
-    });
 
     // 🔄 ÉTAPE 3: Revalider les pages concernées
     // On force Next.js à recharger les pages pour afficher les changements
@@ -90,7 +120,11 @@ export async function deletePhotoAction(
 
     return {
       success: true,
-      message: 'Photo supprimée avec succès',
+      // Le bouton affiche ce message en toast : on prévient du changement
+      // de photo principale
+      message: photo.isMain
+        ? 'Photo supprimée, la suivante devient votre photo principale'
+        : 'Photo supprimée avec succès',
     };
   } catch (error) {
     console.error('Erreur lors de la suppression de la photo:', error);

@@ -9,6 +9,9 @@ import { usePhotoManagement } from './photo-management';
 export function PhotoList() {
   const { optimisticPhotos } = usePhotoManagement();
 
+  // Une seule photo restante : on ne peut pas la supprimer
+  const isLast = optimisticPhotos.length === 1;
+
   return (
     <div
       className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
@@ -51,7 +54,7 @@ export function PhotoList() {
                   {photo.isMain ? 'Photo principale' : `Photo ${index + 1}`}
                 </span>
               </div>
-              <PhotoDeleteButton photoId={photo.id} isMain={photo.isMain} />
+              <PhotoDeleteButton photoId={photo.id} isLast={isLast} />
             </div>
           </CardHeader>
           <CardContent className="p-4">
@@ -69,6 +72,13 @@ export function PhotoList() {
                 priority={photo.isMain}
               />
             </div>
+            {/* Explique pourquoi le bouton est grisé
+                (le title d'un bouton ne s'affiche pas sur mobile) */}
+            {isLast && (
+              <p className="mt-3 text-sm text-slate-500">
+                Ajoutez une autre photo avant de pouvoir supprimer celle-ci.
+              </p>
+            )}
           </CardContent>
         </Card>
       ))}

@@ -9,20 +9,17 @@ import { usePhotoManagement } from './photo-management';
 
 interface PhotoDeleteButtonProps {
   photoId: string;
-  isMain: boolean;
+  isLast: boolean;
 }
 
-export function PhotoDeleteButton({ photoId, isMain }: PhotoDeleteButtonProps) {
+export function PhotoDeleteButton({ photoId, isLast }: PhotoDeleteButtonProps) {
   const [isPending, startTransition] = useTransition();
   const [showConfirm, setShowConfirm] = useState(false);
   const { deletePhoto } = usePhotoManagement();
 
+  // Supprimer la photo principale est permis : la suivante prend sa place
+  // (règle appliquée par deletePhotoAction)
   const handleDelete = () => {
-    if (isMain) {
-      toast.error('Vous ne pouvez pas supprimer la photo principale');
-      return;
-    }
-
     if (!showConfirm) {
       setShowConfirm(true);
       return;
@@ -57,14 +54,15 @@ export function PhotoDeleteButton({ photoId, isMain }: PhotoDeleteButtonProps) {
     setShowConfirm(false);
   };
 
-  if (isMain) {
+  // Grisé quand c'est la dernière photo
+  if (isLast) {
     return (
       <Button
         variant="outline"
         size="sm"
         className="h-8 w-8 cursor-not-allowed p-0 opacity-50"
         disabled
-        title="Impossible de supprimer la photo principale"
+        aria-label="Impossible de supprimer la dernière photo"
       >
         <Trash2 className="h-3 w-3" />
       </Button>
